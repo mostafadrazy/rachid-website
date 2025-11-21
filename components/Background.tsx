@@ -8,7 +8,7 @@ interface BackgroundProps {
 
 const Background: React.FC<BackgroundProps> = ({ mousePosition }) => {
   return (
-    <div className="fixed inset-0 z-0 bg-[#050505] pointer-events-none overflow-hidden">
+    <div className="fixed inset-0 z-0 bg-[#000000] pointer-events-none overflow-hidden">
        {/* Dynamic Spotlight that follows mouse */}
        <motion.div 
           className="absolute rounded-full opacity-20 blur-[100px] mix-blend-screen"
