@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import Lenis from 'lenis';
 import Hero from './components/Hero';
 import Story from './components/Story';
 import About from './components/About';
@@ -16,11 +17,35 @@ import SupplyChain from './components/SupplyChain';
 import Podcast from './components/Podcast';
 
 const App: React.FC = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 }); // Default center
   const [loading, setLoading] = useState(true);
   
   // Explicit view state for more robust routing
   const [view, setView] = useState<'home' | 'about' | 'speaking' | 'supply-chain' | 'podcast'>('home');
+
+  // Initialize Smooth Scrolling (Lenis)
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 2,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Store globally for navigation resetting
+    (window as any).lenis = lenis;
+
+    return () => {
+      lenis.destroy();
+      (window as any).lenis = null;
+    };
+  }, []);
 
   // Handle initial load and browser back/forward
   useEffect(() => {
@@ -47,6 +72,17 @@ const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
+  // SCROLL TO TOP when view changes
+  useEffect(() => {
+    // Native Reset
+    window.scrollTo(0, 0);
+    
+    // Lenis Reset (Instant)
+    if ((window as any).lenis) {
+      (window as any).lenis.scrollTo(0, { immediate: true });
+    }
+  }, [view]);
+
   const navigate = (path: string) => {
     let newView: 'home' | 'about' | 'speaking' | 'supply-chain' | 'podcast' = 'home';
     
@@ -57,7 +93,7 @@ const App: React.FC = () => {
 
     setView(newView);
     window.history.pushState({}, '', path);
-    window.scrollTo(0, 0);
+    // The useEffect above will handle the scrolling to top
   };
 
   // Subtle parallax effect based on mouse movement

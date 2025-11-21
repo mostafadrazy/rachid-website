@@ -2,48 +2,67 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
 
-const AnimatedNumber: React.FC<{ value: number; suffix?: string }> = ({ value, suffix = "" }) => {
+const AnimatedNumber: React.FC<{ value: number | string; suffix?: string }> = ({ value, suffix = "" }) => {
   const ref = useRef<HTMLSpanElement>(null);
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, { damping: 50, stiffness: 100 });
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  
+  const isNumber = typeof value === 'number';
 
   useEffect(() => {
-    if (isInView) {
-      motionValue.set(value);
+    if (isInView && isNumber) {
+      motionValue.set(value as number);
     }
-  }, [isInView, value, motionValue]);
+  }, [isInView, value, motionValue, isNumber]);
 
   useEffect(() => {
+    if (!isNumber) {
+        if (ref.current) ref.current.textContent = value as string;
+        return;
+    }
+
     return springValue.on("change", (latest) => {
       if (ref.current) {
         ref.current.textContent = Math.floor(latest).toString() + suffix;
       }
     });
-  }, [springValue, suffix]);
+  }, [springValue, suffix, value, isNumber]);
 
-  return <span ref={ref} />;
+  return <span ref={ref}>{!isNumber ? value : ""}</span>;
 };
 
 const Stats: React.FC = () => {
   const stats = [
     {
-      value: 100,
-      suffix: "M+",
-      label: "Regional ARR Growth",
-      sub: "Driving consistent revenue"
+      value: "Millions",
+      suffix: "",
+      label: "Regional ARR",
+      sub: "Led and Grown"
     },
     {
       value: 10,
       suffix: "+",
-      label: "Countries Deployed",
-      sub: "Across MEA Region"
+      label: "Countries",
+      sub: "Supply Chain Projects"
     },
     {
-      value: 3,
+      value: "Advisor",
       suffix: "",
-      label: "Major Summits",
-      sub: "Kilimanjaro, Toubkal, Blanc"
+      label: "To Startups",
+      sub: "AI & Growth Systems"
+    },
+    {
+      value: "Host",
+      suffix: "",
+      label: "Podcast",
+      sub: "\"Supply Chain Innovators\""
+    },
+    {
+      value: "Global",
+      suffix: "",
+      label: "Expeditions",
+      sub: "Learning Resilience"
     }
   ];
 
@@ -64,7 +83,7 @@ const Stats: React.FC = () => {
                transition={{ duration: 0.8 }}
              >
                <h2 className="text-7xl md:text-8xl font-bold uppercase leading-[0.85] mb-8 font-['Oswald'] tracking-tighter">
-                 Impact <br/> By The <br/> <span className="text-blue-600">Numbers</span>
+                 Numbers <br/> That Tell <br/> <span className="text-blue-600">A Story</span>
                </h2>
                <p className="text-lg text-gray-400 font-medium leading-relaxed border-l-4 border-blue-600 pl-6 mb-10">
                  Real impact isn't just about the destination. It's about the growth, reach, and resilience built along the way.
@@ -82,16 +101,16 @@ const Stats: React.FC = () => {
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: idx * 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="group border-b border-white/10 py-16 hover:bg-white/5 transition-colors px-4 md:px-8 relative"
+                transition={{ delay: idx * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="group border-b border-white/10 py-12 hover:bg-white/5 transition-colors px-4 md:px-8 relative"
               >
                 <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 relative z-10">
-                  <span className="text-7xl md:text-9xl font-bold font-['Oswald'] text-white tracking-tighter group-hover:text-blue-500 transition-colors">
+                  <span className="text-6xl md:text-8xl font-bold font-['Oswald'] text-white tracking-tighter group-hover:text-blue-500 transition-colors">
                     <AnimatedNumber value={stat.value} suffix={stat.suffix} />
                   </span>
                   <div className="text-right md:text-left">
                     <span className="block text-xl font-bold uppercase tracking-wider text-white mb-1">{stat.label}</span>
-                    <span className="block text-sm text-gray-500 font-mono">{stat.sub}</span>
+                    <span className="block text-sm text-gray-500 font-mono uppercase tracking-widest">{stat.sub}</span>
                   </div>
                 </div>
               </motion.div>

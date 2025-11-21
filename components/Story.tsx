@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
@@ -13,23 +14,33 @@ const Story: React.FC = () => {
   const chapters = [
     {
       id: "01",
-      title: "The Beginning",
+      title: "The Story Begins",
       content: "I was born in a tiny village in the south of Morocco. A place with no tap water, no electricity, and no roads. Nights were guided by candlelight and days by a sense of quiet determination. For years, our village didn’t even appear on Google Maps. Discipline, resilience, and humility were not ideas. They were the way we survived. They were simply life."
     },
     {
       id: "02",
-      title: "The Souk & The Street",
-      content: "My earliest lessons in business and leadership came from my grandfather. I watched him run our small shop with care, precision, and generosity. I started working at the age of nine. I sold plastic bags in the souk, fruits on the roadside, and anything that could help us move forward. I didn’t know it then, but those moments were my first lessons in business, supply chain, customer experience, and entrepreneurship."
+      title: "Lessons in Humanity",
+      content: "My earliest lessons in business and leadership came from my grandfather. I watched him run our small shop with care, precision, and generosity. He treated every customer like family and every challenge with calm dignity. I started working at the age of nine. I sold plastic bags in the souk, fruits on the roadside, and anything that could help us move forward. I didn’t know it then, but those moments were my first lessons in business, supply chain, customer experience, and entrepreneurship. They were also my first lessons in humanity."
     },
     {
       id: "03",
-      title: "The Climb",
-      content: "Years later, after crossing continents, changing industries, starting from zero more than once, and choosing the harder path every single time, I now lead Slimstock MEA and advise businesses across the region on their growth strategies. As I grew older, challenge became my compass. I look for mountains, silence, and moments that push me beyond my limits."
+      title: "Leading MEA",
+      content: "Years later, after crossing continents, changing industries, starting from zero more than once, and choosing the harder path every single time, I now lead Slimstock MEA and advise businesses across the region on their growth strategies."
     },
     {
       id: "04",
-      title: "The Philosophy",
-      content: "I also find peace in reading, writing, and learning. They keep me curious. They keep me grounded. They keep me connected to a world much bigger than my own. The journey shaped me. The struggles softened me. The mountains humbled me. And today, I carry all those lessons into the work I do."
+      title: "The Climb",
+      content: "As I grew older, challenge became my compass. When I am not working, I look for mountains, silence, and moments that push me beyond my limits. Hiking is where I reconnect with myself. I have been privileged to stand on the summits of Kilimanjaro, Mount Toubkal, and Mont Blanc, and to walk the long path to Everest Base Camp. Each climb teaches me the same truth. Growth is always waiting just beyond discomfort. And clarity arrives only when the noise fades."
+    },
+    {
+      id: "05",
+      title: "Staying Grounded",
+      content: "I also find peace in reading, writing, and learning. They keep me curious. They keep me grounded. They keep me connected to a world much bigger than my own."
+    },
+    {
+      id: "06",
+      title: "The Journey Today",
+      content: "The journey shaped me. The struggles softened me. The mountains humbled me. And today, I carry all those lessons into the work I do, helping others build, grow, and lead with clarity and purpose. Because no matter where we begin, every journey holds the power to inspire the next one."
     }
   ];
 
@@ -44,11 +55,11 @@ const Story: React.FC = () => {
             <motion.div style={{ opacity }} className="relative">
               <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Biography</span>
               <h2 className="text-6xl md:text-8xl font-bold uppercase font-['Oswald'] leading-none mb-8">
-                The <br/> Journey
+                A Journey of <br/> Growth
               </h2>
               <div className="w-20 h-1 bg-blue-600 mb-8"></div>
-              <p className="text-gray-400 text-lg">
-                A story of resilience, from the Atlas mountains to the forefront of supply chain innovation.
+              <p className="text-gray-400 text-lg font-medium">
+                "No matter where we begin, every journey holds the power to inspire the next one."
               </p>
             </motion.div>
           </div>
@@ -76,11 +87,11 @@ const Story: React.FC = () => {
                   {chapter.id}
                 </span>
                 
-                <h3 className="text-3xl md:text-4xl font-bold uppercase font-['Oswald'] mb-6 relative z-10">
+                <h3 className="text-3xl md:text-4xl font-bold uppercase font-['Oswald'] mb-6 relative z-10 text-white group-hover:text-blue-500 transition-colors">
                   {chapter.title}
                 </h3>
                 
-                <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-light group-hover:text-gray-200 transition-colors duration-500">
+                <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium group-hover:text-white transition-colors duration-500">
                   {chapter.content}
                 </p>
               </motion.div>
@@ -95,10 +106,10 @@ const Story: React.FC = () => {
             >
                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px]"></div>
                <div className="relative z-10 text-center">
-                 <p className="font-['Syne'] text-3xl md:text-5xl font-bold leading-tight mb-8">
+                 <p className="font-['Syne'] text-3xl md:text-5xl font-bold leading-tight mb-8 text-white">
                    "Growth is always waiting just beyond discomfort."
                  </p>
-                 <span className="text-blue-500 uppercase tracking-widest text-xs font-bold">— Rachid</span>
+                 <span className="text-blue-500 uppercase tracking-widest text-sm font-bold">— Rachid</span>
                </div>
             </motion.div>
           </div>
