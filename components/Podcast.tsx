@@ -1,7 +1,7 @@
 
 import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
-import { Mic, Globe, Heart, Radio, Users, CirclePlay, ArrowRight, Activity, Headphones, Target, Layers, Rss, Cast, Play, Share2 } from 'lucide-react';
+import { Mic, Globe, Heart, Radio, Users, CirclePlay, ArrowRight, Activity, Headphones, Target, Layers, Cast, Play, Share2 } from 'lucide-react';
 
 // --- Brand Icons ---
 const SpotifyIcon = () => (
@@ -11,8 +11,11 @@ const SpotifyIcon = () => (
 );
 
 const AppleIcon = () => (
-   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74s2.57-.9 3.8-.75c.52.01 3.75.23 5.09 2.62-4.31 2.36-3.46 8.86 1.28 10.58-.65 1.4-1.45 2.65-2.49 3.78-.9.98-2.03 1.94-2.76 1.94v.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+   <svg viewBox="0 0 22.773 22.773" fill="currentColor" className="w-5 h-5">
+     <g>
+        <path d="M15.769,0c0.053,0,0.106,0,0.162,0c0.13,1.606-0.483,2.806-1.228,3.675c-0.731,0.863-1.732,1.7-3.351,1.573c-0.108-1.583,0.506-2.694,1.25-3.561C13.292,0.879,14.557,0.16,15.769,0z"/>
+        <path d="M20.67,16.716c0,0.016,0,0.03,0,0.045c-0.455,1.378-1.104,2.559-1.896,3.655c-0.723,0.995-1.609,2.334-3.191,2.334c-1.367,0-2.275-0.879-3.676-0.903c-1.482-0.024-2.297,0.735-3.652,0.926c-0.155,0-0.31,0-0.462,0c-0.995-0.144-1.798-0.932-2.383-1.642c-1.725-2.098-3.058-4.808-3.306-8.276c0-0.34,0-0.679,0-1.019c0.105-2.482,1.311-4.5,2.914-5.478c0.846-0.52,2.009-0.963,3.304-0.765c0.555,0.086,1.122,0.276,1.619,0.464c0.471,0.181,1.06,0.502,1.618,0.485c0.378-0.011,0.754-0.208,1.135-0.347c1.116-0.403,2.21-0.865,3.652-0.648c1.733,0.262,2.963,1.032,3.723,2.22c-1.466,0.933-2.625,2.339-2.427,4.74C17.818,14.688,19.086,15.964,20.67,16.716z"/>
+     </g>
    </svg>
 );
 
@@ -75,12 +78,6 @@ const AudioWaveParams: React.FC = () => (
     </div>
 );
 
-const SignalLine: React.FC<{ vertical?: boolean }> = ({ vertical }) => (
-    <div className={`absolute bg-blue-900/30 ${vertical ? 'w-[1px] h-full left-6' : 'h-[1px] w-full top-1/2'}`}>
-        <div className={`absolute bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] ${vertical ? 'w-full h-12 top-0 animate-scan-vertical' : 'h-full w-12 left-0 animate-scan-horizontal'}`}></div>
-    </div>
-);
-
 const Podcast: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -93,10 +90,22 @@ const Podcast: React.FC = () => {
   return (
     <section id="podcast" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-32 pb-24 overflow-hidden perspective-1000">
       
-      {/* Deep Space Background */}
-      <div className="absolute top-0 left-0 w-full h-full bg-[#050505] pointer-events-none">
-         <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-900/5 rounded-full blur-[150px]"></div>
-         <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[150px]"></div>
+      {/* Background Image Layer */}
+      <div className="absolute inset-0 z-0">
+          <img 
+              src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1763745408/SUD04_kepvhm.jpg" 
+              alt="Podcast Background" 
+              className="w-full h-full object-cover opacity-20"
+          />
+          {/* Gradients to fade image into background */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-[#050505]/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#050505]/50 to-transparent"></div>
+      </div>
+
+      {/* Deep Space Background Effects */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+         <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-900/10 rounded-full blur-[150px] mix-blend-screen"></div>
+         <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[150px] mix-blend-screen"></div>
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
       </div>
       
@@ -122,7 +131,7 @@ const Podcast: React.FC = () => {
 
              <h1 className="text-7xl md:text-9xl font-bold uppercase font-['Oswald'] tracking-tighter leading-[0.85] mb-6 drop-shadow-2xl">
                Supply Chain <br/>
-               <span className="text-transparent text-stroke-blue relative">Innovators</span>
+               <span className="text-transparent text-stroke-blue hover:text-white transition-colors duration-500 relative">Innovators</span>
              </h1>
              
              <p className="text-xl md:text-2xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed mb-12">
@@ -141,7 +150,6 @@ const Podcast: React.FC = () => {
                   { icon: <SpotifyIcon />, label: "Spotify" },
                   { icon: <AppleIcon />, label: "Apple" },
                   { icon: <YouTubeIcon />, label: "YouTube" },
-                  { icon: <Rss size={18} />, label: "RSS" },
                 ].map((platform, idx) => (
                   <a 
                     key={idx}
@@ -166,8 +174,8 @@ const Podcast: React.FC = () => {
               >
                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60"></div>
                  <img 
-                    src="https://images.unsplash.com/photo-1478737270239-2f02b77ac6d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
-                    alt="Studio Mic" 
+                    src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1763745408/SUD04_kepvhm.jpg" 
+                    alt="Podcast Host" 
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-110"
                  />
                  
@@ -186,22 +194,22 @@ const Podcast: React.FC = () => {
            <div className="order-1 lg:order-2 space-y-10">
               <div className="inline-block px-4 py-1 border border-blue-600/30 rounded-full text-blue-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">The Mission</div>
               <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald'] leading-[0.9]">
-                Amplifying <br/> The <span className="text-transparent text-stroke">Builders</span>
+                Amplifying <br/> The <span className="text-transparent text-stroke hover:text-white transition-colors duration-500 relative">Builders</span>
               </h2>
               <p className="text-xl text-gray-300 font-light leading-relaxed">
                 Supply chains are the unseen engines of the world. But the leaders who run them often operate in the shadows. 
               </p>
-              <div className="space-y-6">
+              <div className="space-y-8 md:space-y-10">
                  {[
                    { title: "Operator First", desc: "No consultants. Just real practitioners." },
                    { title: "MEA Centric", desc: "Nuanced conversations about our region." },
                    { title: "Future Focused", desc: "AI, automation, and the next decade." }
                  ].map((item, i) => (
-                   <div key={i} className="flex items-start gap-4 group">
-                      <div className="mt-1 w-2 h-2 bg-blue-600 rounded-full group-hover:scale-150 transition-transform"></div>
+                   <div key={i} className="flex items-start gap-4 md:gap-6 group">
+                      <div className="mt-1 md:mt-2 w-2 h-2 md:w-3 md:h-3 bg-blue-600 rounded-full group-hover:scale-150 transition-transform shrink-0"></div>
                       <div>
-                        <h4 className="text-lg font-bold uppercase font-['Oswald'] text-white">{item.title}</h4>
-                        <p className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">{item.desc}</p>
+                        <h4 className="text-lg md:text-3xl font-bold uppercase font-['Oswald'] text-white mb-2">{item.title}</h4>
+                        <p className="text-sm md:text-xl text-gray-500 group-hover:text-gray-400 transition-colors font-light">{item.desc}</p>
                       </div>
                    </div>
                  ))}
@@ -256,52 +264,36 @@ const Podcast: React.FC = () => {
         </div>
 
 
-        {/* --- EPISODE BLUEPRINT (Signal Chain) --- */}
-        <div className="relative mb-48 bg-[#080808] border border-white/5 p-12 md:p-24 rounded-3xl overflow-hidden">
-           {/* Circuit Background */}
-           <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-full bg-gradient-to-b from-transparent via-blue-600/20 to-transparent"></div>
-
-           <div className="relative z-10 text-center mb-20">
-              <span className="text-blue-500 font-bold tracking-[0.3em] uppercase text-xs">The Blueprint</span>
-              <h2 className="text-5xl md:text-6xl font-bold uppercase font-['Oswald'] mt-4">Episode Anatomy</h2>
+        {/* --- EPISODE ANATOMY (Redesigned) --- */}
+        <div className="mb-48 relative">
+           <div className="mb-20">
+              <span className="text-blue-600 font-bold tracking-[0.2em] uppercase text-xs mb-4 block">The Blueprint</span>
+              <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald']">Episode Anatomy</h2>
            </div>
 
-           <div className="relative max-w-4xl mx-auto space-y-4">
+           <div className="grid grid-cols-1 md:grid-cols-5">
               {[
                 { step: "01", label: "Origin", desc: "The personal backstory." },
                 { step: "02", label: "Conflict", desc: "The moment of crisis." },
                 { step: "03", label: "Action", desc: "The strategic pivot." },
                 { step: "04", label: "Result", desc: "The transformation." },
                 { step: "05", label: "Future", desc: "The vision ahead." },
-              ].map((item, i, arr) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="flex items-center gap-6 md:gap-12 group"
-                >
-                   {/* Left Side (Time/Index) */}
-                   <div className="flex-1 text-right hidden md:block">
-                      <span className="text-4xl font-['Oswald'] font-bold text-white/10 group-hover:text-blue-600/50 transition-colors">{item.step}</span>
+              ].map((item, i) => (
+                <div key={i} className="group relative border-t border-b border-r border-white/10 first:border-l p-10 h-[400px] flex flex-col justify-between hover:bg-[#0a0a0a] transition-all duration-500">
+                   {/* Background Hover Effect */}
+                   <div className="absolute inset-0 bg-gradient-to-b from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                   
+                   <div className="flex flex-col gap-2">
+                      <span className="text-sm font-bold text-blue-600 opacity-0 group-hover:opacity-100 transform -translate-y-2 group-hover:translate-y-0 transition-all duration-500">Step</span>
+                      <span className="text-6xl font-['Oswald'] font-bold text-white/10 group-hover:text-white transition-colors duration-500">{item.step}</span>
                    </div>
 
-                   {/* Center Node */}
-                   <div className="relative flex-shrink-0">
-                      <div className="w-4 h-4 bg-[#050505] border-2 border-white/20 rounded-full z-10 relative group-hover:border-blue-500 group-hover:scale-125 transition-all duration-300"></div>
-                      {i !== arr.length - 1 && (
-                        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[2px] h-16 bg-white/5 group-hover:bg-blue-600/30 transition-colors"></div>
-                      )}
+                   <div className="relative z-10">
+                      <div className="w-12 h-1 bg-blue-600/30 mb-8 group-hover:w-full group-hover:bg-blue-600 transition-all duration-500"></div>
+                      <h4 className="text-2xl font-bold uppercase font-['Oswald'] text-white mb-3">{item.label}</h4>
+                      <p className="text-sm text-gray-500 font-light group-hover:text-gray-300 transition-colors leading-relaxed">{item.desc}</p>
                    </div>
-
-                   {/* Right Side (Content) */}
-                   <div className="flex-1 p-6 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] backdrop-blur-sm rounded-xl hover:border-blue-500/30 transition-all duration-300 w-full">
-                      <h4 className="text-xl font-bold uppercase font-['Oswald'] text-white mb-1 group-hover:text-blue-400 transition-colors">{item.label}</h4>
-                      <p className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors">{item.desc}</p>
-                   </div>
-                </motion.div>
+                </div>
               ))}
            </div>
         </div>

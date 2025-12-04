@@ -10,14 +10,12 @@ import Stats from './components/Stats';
 import Background from './components/Background';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
 import Speaking from './components/Speaking';
 import SupplyChain from './components/SupplyChain';
 import Podcast from './components/Podcast';
 
 const App: React.FC = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 }); // Default center
   const [loading, setLoading] = useState(true);
   
   // Explicit view state for more robust routing
@@ -53,14 +51,14 @@ const App: React.FC = () => {
       const path = window.location.pathname;
       if (path.includes('/about')) {
         setView('about');
-      } else if (path.includes('/speaking')) {
-        setView('speaking');
-      } else if (path.includes('/supply-chain')) {
-        setView('supply-chain');
       } else if (path.includes('/podcast')) {
         setView('podcast');
       } else {
+        // Default to home. Redirect speaking and supply-chain to home.
         setView('home');
+        if (path.includes('/speaking') || path.includes('/supply-chain')) {
+            window.history.replaceState({}, '', '/');
+        }
       }
     };
 
@@ -85,29 +83,20 @@ const App: React.FC = () => {
 
   const navigate = (path: string) => {
     let newView: 'home' | 'about' | 'speaking' | 'supply-chain' | 'podcast' = 'home';
+    let finalPath = path;
     
     if (path === '/about') newView = 'about';
-    else if (path === '/speaking') newView = 'speaking';
-    else if (path === '/supply-chain') newView = 'supply-chain';
     else if (path === '/podcast') newView = 'podcast';
+    // Redirect logic: Point speaking and supply-chain to home
+    else if (path === '/speaking' || path === '/supply-chain') {
+        newView = 'home';
+        finalPath = '/';
+    }
 
     setView(newView);
-    window.history.pushState({}, '', path);
+    window.history.pushState({}, '', finalPath);
     // The useEffect above will handle the scrolling to top
   };
-
-  // Subtle parallax effect based on mouse movement
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // Derive currentPath for Navbar active states
   const getCurrentPath = () => {
@@ -128,8 +117,7 @@ const App: React.FC = () => {
 
       {!loading && (
         <div className="relative min-h-screen w-full text-white selection:bg-blue-600 selection:text-white">
-          <CustomCursor />
-          <Background mousePosition={mousePosition} />
+          <Background />
           
           <div className="relative z-10 flex flex-col">
             <Navbar currentPath={getCurrentPath()} onNavigate={navigate} />

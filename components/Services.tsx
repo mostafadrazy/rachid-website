@@ -1,221 +1,147 @@
 
-import React, { useRef, useState } from 'react';
-import { motion, Variants } from 'framer-motion';
-import { TrendingUp, Database, Users, Globe, Mic, ArrowUpRight, Box, Layers } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowUpRight, Box, Layers, Globe, Mic, Users } from 'lucide-react';
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
-  }
-};
-
-// --- Spotlight Card Component ---
-const SpotlightCard: React.FC<{
-  children: React.ReactNode;
+const ServiceCard: React.FC<{
+  title: string;
+  description: string;
+  icon: React.ReactNode;
   className?: string;
-  bgImage?: string;
-}> = ({ children, className, bgImage }) => {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!divRef.current) return;
-
-    const div = divRef.current;
-    const rect = div.getBoundingClientRect();
-
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
-  const handleMouseEnter = () => {
-    setOpacity(1);
-  };
-
-  const handleMouseLeave = () => {
-    setOpacity(0);
-  };
-
-  return (
-    <motion.div
-      ref={divRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      variants={itemVariants}
-      className={`relative overflow-hidden rounded-sm border border-white/10 bg-[#0a0a0a] transition-all duration-300 ${className}`}
-    >
-      {/* Spotlight Gradient Layer */}
-      <div
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
-        style={{
-          opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(37,99,235,0.15), transparent 40%)`,
-        }}
-      />
-      
-      {/* Border Spotlight Layer */}
-      <div
-         className="pointer-events-none absolute inset-0 transition duration-300"
-         style={{
-            opacity,
-            background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(37,99,235,0.4), transparent 40%)`,
-            maskImage: "linear-gradient(black, black), linear-gradient(black, black)",
-            maskClip: "content-box, padding-box",
-            maskComposite: "exclude",
-            padding: "1px",
-            borderRadius: "inherit"
-         }}
-      />
-
-      {bgImage && (
-        <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity duration-700">
-          <img src={bgImage} alt="" className="w-full h-full object-cover grayscale group-hover:scale-110 transition-transform duration-1000" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent"></div>
-        </div>
-      )}
-
-      {/* Content Container */}
-      <div className="relative z-10 h-full">{children}</div>
-    </motion.div>
-  );
-};
-
-
-const ServiceCard: React.FC<{ 
-  title: string; 
-  description: string; 
-  icon: React.ReactNode; 
-  className?: string;
-  bgImage?: string;
-}> = ({ title, description, icon, className, bgImage }) => (
-  <SpotlightCard className={`p-8 flex flex-col justify-between group ${className}`} bgImage={bgImage}>
+  delay?: number;
+  image?: string;
+}> = ({ title, description, icon, className, delay = 0, image }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay, duration: 0.5 }}
+    className={`bg-[#0a0a0a] border border-white/10 p-8 flex flex-col justify-between group hover:border-blue-600/50 transition-colors duration-500 relative overflow-hidden ${className}`}
+  >
+    {image && (
+       <div className="absolute inset-0 z-0">
+          <img 
+            src={image} 
+            alt={title} 
+            className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700 grayscale group-hover:grayscale-0"
+          />
+          {/* Lighter gradients to make image more visible */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent mix-blend-multiply"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#050505]/60"></div>
+       </div>
+    )}
     
-    <div className="relative z-10 flex justify-between items-start mb-8">
-      <div className="p-4 bg-white/5 rounded-sm text-white group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 border border-white/5">
+    <div className="absolute top-0 right-0 w-24 h-24 bg-blue-600/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+    
+    <div className="mb-6 relative z-10">
+      <div className="w-12 h-12 rounded bg-white/5 flex items-center justify-center text-blue-500 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 backdrop-blur-sm">
         {icon}
       </div>
-      <ArrowUpRight className="w-6 h-6 text-gray-600 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all stroke-[3px]" />
+      <h3 className="text-2xl font-bold uppercase font-['Oswald'] mb-3 group-hover:text-white transition-colors drop-shadow-lg">{title}</h3>
+      <p className="text-gray-300 text-sm leading-relaxed group-hover:text-white transition-colors drop-shadow-md font-medium">{description}</p>
     </div>
     
-    <div className="relative z-10 mt-auto">
-      <h3 className="text-2xl font-bold uppercase font-['Oswald'] mb-4 group-hover:text-blue-400 transition-colors leading-none">{title}</h3>
-      <p className="text-gray-400 text-sm font-medium leading-relaxed group-hover:text-gray-200 transition-colors">
-        {description}
-      </p>
+    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-blue-400 transition-colors relative z-10">
+      <span>Explore</span> <ArrowUpRight size={14} />
     </div>
-  </SpotlightCard>
+  </motion.div>
 );
 
 const Services: React.FC = () => {
   return (
-    <section id="services" className="py-32 bg-[#050505] border-t border-white/5 relative overflow-hidden">
+    <section id="services" className="py-32 bg-[#050505] relative">
       {/* Background Decoration */}
-      <div className="absolute right-0 top-1/3 w-[40vw] h-[40vw] bg-blue-900/5 rounded-full blur-[150px] pointer-events-none"></div>
+      <div className="absolute left-0 top-1/3 w-[30vw] h-[30vw] bg-blue-900/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="container mx-auto px-6 md:px-12">
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
         
-        <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-             <span className="text-blue-600 font-bold tracking-[0.2em] uppercase text-xs block mb-4">Expertise</span>
-             <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald'] leading-none">
-               What I <br/> <span className="text-transparent text-stroke-blue">Build</span>
-             </h2>
-          </motion.div>
-          <motion.div 
-             initial={{ opacity: 0, x: 30 }}
+        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+           <motion.div
+             initial={{ opacity: 0, x: -20 }}
              whileInView={{ opacity: 1, x: 0 }}
              viewport={{ once: true }}
-             transition={{ duration: 0.8, delay: 0.2 }}
-             className="md:max-w-md text-right"
-          >
-             <p className="text-gray-400 leading-relaxed font-medium">
-               I don't just advise. I build scalable engines for growth. My approach blends data-driven discipline with the art of leadership.
-             </p>
-          </motion.div>
+           >
+             <span className="text-blue-600 font-bold tracking-[0.2em] uppercase text-xs block mb-4">Expertise</span>
+             <h2 className="text-6xl md:text-7xl font-bold uppercase font-['Oswald'] leading-none">
+               What I <br/> Build
+             </h2>
+           </motion.div>
+           <motion.div
+             initial={{ opacity: 0, x: 20 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             viewport={{ once: true }}
+             className="max-w-md text-gray-400 text-lg"
+           >
+             Scalable systems for a complex world. From supply chain optimization to leadership frameworks.
+           </motion.div>
         </div>
 
-        {/* Bento Grid */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(300px,auto)]"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Main Feature - Supply Chain (Large) */}
-          <SpotlightCard className="md:col-span-2 md:row-span-2 p-8 md:p-12 flex flex-col justify-end group bg-blue-950/10">
-             <div className="absolute top-0 right-0 p-32 bg-blue-600/20 blur-[80px] rounded-full group-hover:bg-blue-600/30 transition-colors duration-700"></div>
-             <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity duration-700">
-                <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center grayscale mix-blend-overlay"></div>
+          {/* Main Large Card with Image */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="md:col-span-2 md:row-span-2 min-h-[500px] relative group rounded-sm overflow-hidden border border-white/10 bg-[#0a0a0a]"
+          >
+             <div className="absolute inset-0">
+                <img 
+                  src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+                  alt="Supply Chain Transformation" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-80 grayscale group-hover:grayscale-0"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent"></div>
              </div>
-
-             <div className="relative z-10 mb-auto pt-4">
-                <div className="bg-blue-600 w-16 h-16 flex items-center justify-center rounded-sm mb-6 text-white shadow-[0_0_30px_rgba(37,99,235,0.4)]">
-                  <Layers size={32} />
+             
+             <div className="absolute bottom-0 left-0 p-10 z-20 max-w-xl">
+                <div className="w-16 h-16 bg-blue-600 flex items-center justify-center mb-6 text-white shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                   <Layers size={32} />
                 </div>
-             </div>
-
-             <div className="relative z-10">
-                <h3 className="text-4xl md:text-5xl font-bold uppercase font-['Oswald'] mb-6 text-white leading-[0.9]">
-                  Supply Chain <br/> Transformation
-                </h3>
-                <p className="text-gray-300 font-medium leading-relaxed mb-8 max-w-md">
-                  Helping companies across MEA move from chaos to clarity by designing smarter, more resilient, and technology-driven operations.
+                <h3 className="text-4xl md:text-5xl font-bold uppercase font-['Oswald'] text-white mb-4">Supply Chain Transformation</h3>
+                <p className="text-gray-200 text-lg mb-8 leading-relaxed font-medium">
+                  Helping companies across MEA move from chaos to clarity by designing smarter, more resilient operations.
                 </p>
-                <button className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-blue-400 group-hover:text-white transition-colors">
-                  View Case Studies <ArrowUpRight size={16} className="stroke-[3px]" />
+                <button className="bg-white text-black px-8 py-3 font-bold uppercase tracking-widest text-sm hover:bg-blue-600 hover:text-white transition-all">
+                   View Case Studies
                 </button>
              </div>
-          </SpotlightCard>
+          </motion.div>
 
+          {/* Secondary Cards */}
           <ServiceCard 
-            title="Best-in-Class Solutions" 
-            description="From planning to execution, enabling retailers, distributors, and manufacturers to scale with confidence and precision."
+            title="Strategic Planning" 
+            description="Turning high-level ambition into executable roadmaps for growth and expansion."
             icon={<Box size={24} />}
-            className="md:col-span-1 md:row-span-1"
+            delay={0.2}
+            image="https://plus.unsplash.com/premium_photo-1661687254326-bcacaa1fa47e?q=80&w=1740&auto=format&fit=crop"
           />
-
+          
           <ServiceCard 
-            title="Leadership for MEA" 
-            description="Empowering teams to grow through discipline, empathy, and strategic clarity while building the next generation of supply chain leaders."
+            title="Leadership" 
+            description="Building teams that take ownership, embrace discomfort, and deliver results."
             icon={<Users size={24} />}
-            className="md:col-span-1 md:row-span-1"
+            delay={0.3}
+            image="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bGVhZGVyc2hpcHxlbnwwfHwwfHx8MA%3D%3D=crop"
           />
 
           <ServiceCard 
-            title="Networking & Ecosystems" 
-            description="Connecting people, ideas, and opportunities across MEA to accelerate growth, spark partnerships, and create long-term value."
+            title="Ecosystems" 
+            description="Connecting partners, vendors, and technologies to create value networks."
             icon={<Globe size={24} />}
-            className="md:col-span-2 md:row-span-1"
-            bgImage="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+            delay={0.4}
+            image="https://plus.unsplash.com/premium_photo-1723867236011-6099f308dab0?q=80&w=2070&auto=format&fit=crop"
           />
 
-          <ServiceCard 
-            title="Content & Storytelling" 
-            description="Sharing frameworks, insights, and real stories about AI, supply chain, leadership, and growth to inspire transformation across the region."
+           <ServiceCard 
+            title="Storytelling" 
+            description="Sharing insights on AI, leadership, and the future of supply chain."
             icon={<Mic size={24} />}
-            className="md:col-span-4 md:row-span-1 bg-[#0a0a0a]"
+            delay={0.5}
+            image="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=2070&auto=format&fit=crop"
           />
 
-        </motion.div>
+        </div>
       </div>
     </section>
   );
