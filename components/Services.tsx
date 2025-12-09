@@ -62,7 +62,7 @@ const Services: React.FC = () => {
              viewport={{ once: true }}
            >
              <span className="text-blue-600 font-bold tracking-[0.2em] uppercase text-xs block mb-4">Expertise</span>
-             <h2 className="text-6xl md:text-7xl font-bold uppercase font-['Oswald'] leading-none">
+             <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold uppercase font-['Oswald'] leading-none">
                What I <br/> Build
              </h2>
            </motion.div>
@@ -98,7 +98,7 @@ const Services: React.FC = () => {
                 <div className="w-16 h-16 bg-blue-600 flex items-center justify-center mb-6 text-white shadow-[0_0_30px_rgba(37,99,235,0.3)]">
                    <Layers size={32} />
                 </div>
-                <h3 className="text-4xl md:text-5xl font-bold uppercase font-['Oswald'] text-white mb-4">Supply Chain Transformation</h3>
+                <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold uppercase font-['Oswald'] text-white mb-4">Supply Chain Transformation</h3>
                 <p className="text-gray-200 text-lg mb-8 leading-relaxed font-medium">
                   Helping companies across MEA move from chaos to clarity by designing smarter, more resilient operations.
                 </p>

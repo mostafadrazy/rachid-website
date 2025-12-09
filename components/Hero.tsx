@@ -71,7 +71,7 @@ const Hero: React.FC = () => {
     offset: ["start start", "end start"]
   });
 
-  const yText = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const yText = useTransform(scrollYProgress, [0, 1], [0, 50]);
   const opacityText = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const containerVariants: Variants = {
@@ -124,8 +124,8 @@ const Hero: React.FC = () => {
           className="flex flex-col items-center text-center max-w-6xl mx-auto"
         >
             {/* Main Headline with Kinetic Typography */}
-            <KineticText className="mb-8">
-              <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold font-['Oswald'] text-white leading-[0.9] tracking-tight drop-shadow-2xl uppercase">
+            <KineticText className="mb-6 md:mb-8">
+              <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold font-['Oswald'] text-white leading-[0.9] tracking-tight drop-shadow-2xl uppercase">
                 I Build <span className="text-transparent text-stroke-blue hover:text-white transition-colors duration-500">Systems</span>,<br />
                 Stories, and <br/>
                 <span className="text-blue-600 relative inline-block">
@@ -136,20 +136,20 @@ const Hero: React.FC = () => {
             </KineticText>
 
             {/* Subheadline */}
-            <motion.p variants={itemVariants} className="text-xl md:text-2xl text-gray-300 font-medium max-w-4xl mb-12 leading-relaxed">
-              From the mountains of Morocco to leading supply chain transformation across MEA, my mission is simple: <span className="text-white font-bold border-b-2 border-blue-600">build, elevate, and inspire.</span>
+            <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium max-w-3xl md:max-w-4xl mb-8 md:mb-12 leading-relaxed px-4">
+              From a small village on the south of Morocco to leading transformations across continents, my mission is simple: <span className="font-bold text-blue-600">Build, Elevate, and Inspire.</span>
             </motion.p>
 
             {/* Magnetic Buttons */}
-            <motion.div variants={itemVariants} className="flex flex-col md:flex-row gap-6 w-full md:w-auto justify-center items-center">
+            <motion.div variants={itemVariants} className="flex flex-col md:flex-row gap-4 md:gap-6 w-full md:w-auto justify-center items-center">
                 
-                <MagneticButton href="#story" className="group relative px-10 py-5 bg-white text-black font-bold uppercase tracking-widest text-sm hover:bg-blue-600 hover:text-white transition-all duration-300 overflow-hidden min-w-[240px] flex justify-center items-center shadow-[0_0_30px_rgba(255,255,255,0.15)] rounded-sm">
+                <MagneticButton href="#story" className="group relative px-8 py-4 md:px-10 md:py-5 bg-white text-black font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-blue-600 hover:text-white transition-all duration-300 overflow-hidden min-w-[200px] md:min-w-[240px] flex justify-center items-center shadow-[0_0_30px_rgba(255,255,255,0.15)] rounded-sm">
                     <span className="relative z-10 flex items-center gap-2">
                         Explore My Journey 
                     </span>
                 </MagneticButton>
                 
-                <MagneticButton href="#contact" className="group px-10 py-5 border-2 border-white/20 text-white font-bold uppercase tracking-widest text-sm hover:bg-white/10 backdrop-blur-sm hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2 min-w-[240px] rounded-sm">
+                <MagneticButton href="#contact" className="group px-8 py-4 md:px-10 md:py-5 border-2 border-white/20 text-white font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-white/10 backdrop-blur-sm hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2 min-w-[200px] md:min-w-[240px] rounded-sm">
                     Book a one to one <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform stroke-[3px]" />
                 </MagneticButton>
 
@@ -162,7 +162,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 mix-blend-difference"
+          className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 mix-blend-difference"
         >
           <span className="text-[10px] uppercase tracking-[0.3em] font-bold">Scroll</span>
           <motion.div 

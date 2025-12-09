@@ -130,8 +130,7 @@ const Podcast: React.FC = () => {
              </div>
 
              <h1 className="text-7xl md:text-9xl font-bold uppercase font-['Oswald'] tracking-tighter leading-[0.85] mb-6 drop-shadow-2xl">
-               Supply Chain <br/>
-               <span className="text-transparent text-stroke-blue hover:text-white transition-colors duration-500 relative">Innovators</span>
+               0to<span className="text-transparent text-stroke-blue hover:text-white transition-colors duration-500 relative">N</span>
              </h1>
              
              <p className="text-xl md:text-2xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed mb-12">

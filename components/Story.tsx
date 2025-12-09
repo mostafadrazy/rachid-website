@@ -54,7 +54,7 @@ const Story: React.FC = () => {
           <div className="lg:w-1/3 lg:h-screen lg:sticky lg:top-0 flex flex-col justify-center py-12 lg:py-0">
             <motion.div style={{ opacity }} className="relative">
               <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Biography</span>
-              <h2 className="text-6xl md:text-8xl font-bold uppercase font-['Oswald'] leading-none mb-8">
+              <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold uppercase font-['Oswald'] leading-none mb-8">
                 A Journey of <br/> Growth
               </h2>
               <div className="w-20 h-1 bg-blue-600 mb-8"></div>
@@ -83,11 +83,11 @@ const Story: React.FC = () => {
                   className="absolute left-[-1px] top-0 w-[3px] bg-blue-600"
                 />
 
-                <span className="text-8xl font-bold text-white/5 font-['Oswald'] absolute -top-12 left-10 group-hover:text-blue-600/10 transition-colors duration-500 select-none">
+                <span className="text-6xl md:text-7xl lg:text-8xl font-bold text-white/5 font-['Oswald'] absolute -top-12 left-10 group-hover:text-blue-600/10 transition-colors duration-500 select-none">
                   {chapter.id}
                 </span>
                 
-                <h3 className="text-3xl md:text-4xl font-bold uppercase font-['Oswald'] mb-6 relative z-10 text-white group-hover:text-blue-500 transition-colors">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase font-['Oswald'] mb-6 relative z-10 text-white group-hover:text-blue-500 transition-colors">
                   {chapter.title}
                 </h3>
                 

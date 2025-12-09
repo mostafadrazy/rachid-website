@@ -56,7 +56,7 @@ const Stats: React.FC = () => {
       value: "Host",
       suffix: "",
       label: "Podcast",
-      sub: "\"Supply Chain Innovators\""
+      sub: "\"0toN\""
     },
     {
       value: "Global",
@@ -82,7 +82,7 @@ const Stats: React.FC = () => {
                viewport={{ once: true }}
                transition={{ duration: 0.8 }}
              >
-               <h2 className="text-7xl md:text-8xl font-bold uppercase leading-[0.85] mb-8 font-['Oswald'] tracking-tighter">
+               <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold uppercase leading-[0.85] mb-8 font-['Oswald'] tracking-tighter">
                  Numbers <br/> That Tell <br/> <span className="text-blue-600">A Story</span>
                </h2>
                <p className="text-lg text-gray-400 font-medium leading-relaxed border-l-4 border-blue-600 pl-6 mb-10">
@@ -105,7 +105,7 @@ const Stats: React.FC = () => {
                 className="group border-b border-white/10 py-12 hover:bg-white/5 transition-colors px-4 md:px-8 relative"
               >
                 <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 relative z-10">
-                  <span className="text-6xl md:text-8xl font-bold font-['Oswald'] text-white tracking-tighter group-hover:text-blue-500 transition-colors">
+                  <span className="text-5xl md:text-7xl lg:text-8xl font-bold font-['Oswald'] text-white tracking-tighter group-hover:text-blue-500 transition-colors">
                     <AnimatedNumber value={stat.value} suffix={stat.suffix} />
                   </span>
                   <div className="text-right md:text-left">
