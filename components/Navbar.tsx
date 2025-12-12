@@ -117,7 +117,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
               onClick={(e) => handleNavClick(e, '#contact', false)}
               className="ml-4 border border-white/20 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all"
             >
-              Book a 1-on-1
+              Reach Out
             </a>
           </div>
 
@@ -156,7 +156,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
               onClick={(e) => handleNavClick(e, '#contact', false)}
               className="mt-8 text-lg font-bold uppercase tracking-widest text-blue-500 border border-blue-500 px-10 py-4 hover:bg-blue-500 hover:text-white transition-colors"
             >
-              Book a 1-on-1
+              Reach Out
             </a>
           </motion.div>
         )}

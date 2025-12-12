@@ -15,32 +15,27 @@ const Story: React.FC = () => {
     {
       id: "01",
       title: "The Story Begins",
-      content: "I was born in a tiny village in the south of Morocco. A place with no tap water, no electricity, and no roads. Nights were guided by candlelight and days by a sense of quiet determination. For years, our village didn’t even appear on Google Maps. Discipline, resilience, and humility were not ideas. They were the way we survived. They were simply life."
+      content: "I was born in a small village in the south of Morocco, a place with no tap water, no electricity, and no roads. Nights were lit by candles; days were driven by quiet determination. For years, our village didn’t even exist on Google Maps. Discipline, resilience, and humility weren’t concepts to learn. They were simply how we lived."
     },
     {
       id: "02",
       title: "Lessons in Humanity",
-      content: "My earliest lessons in business and leadership came from my grandfather. I watched him run our small shop with care, precision, and generosity. He treated every customer like family and every challenge with calm dignity. I started working at the age of nine. I sold plastic bags in the souk, fruits on the roadside, and anything that could help us move forward. I didn’t know it then, but those moments were my first lessons in business, supply chain, customer experience, and entrepreneurship. They were also my first lessons in humanity."
+      content: "My first lessons in business & leadership began in my grandfather’s small shop, where I watched him run a business with precision, generosity, and quiet dignity. By the age of nine, I was selling plastic bags in the souk and fruits by the roadside unaware that these small hustles were teaching me the foundations of business, customer experience, and resilience. Those early days didn’t just shape my work ethic. They shaped my understanding of people. They were my first real lessons in humanity."
     },
     {
       id: "03",
       title: "Leading MEA",
-      content: "Years later, after crossing continents, changing industries, starting from zero more than once, and choosing the harder path every single time, I now lead Slimstock MEA and advise businesses across the region on their growth strategies."
+      content: "After crossing continents, shifting industries, rebuilding from zero more than once, and consistently choosing the harder road, I now lead Slimstock MEA and advise businesses across the region on strategic growth."
     },
     {
       id: "04",
       title: "The Climb",
-      content: "As I grew older, challenge became my compass. When I am not working, I look for mountains, silence, and moments that push me beyond my limits. Hiking is where I reconnect with myself. I have been privileged to stand on the summits of Kilimanjaro, Mount Toubkal, and Mont Blanc, and to walk the long path to Everest Base Camp. Each climb teaches me the same truth. Growth is always waiting just beyond discomfort. And clarity arrives only when the noise fades."
+      content: "Challenge became my compass as I grew older. When I’m not working, I seek mountains, silence, and moments that test my limits. I’ve stood on the summits of Kilimanjaro, Mount Toubkal, and Mont Blanc, and walked the long route to Everest Base Camp. Every climb teaches the same truth: Growth lives just beyond discomfort. And clarity arrives when the noise finally falls away."
     },
     {
       id: "05",
-      title: "Staying Grounded",
-      content: "I also find peace in reading, writing, and learning. They keep me curious. They keep me grounded. They keep me connected to a world much bigger than my own."
-    },
-    {
-      id: "06",
       title: "The Journey Today",
-      content: "The journey shaped me. The struggles softened me. The mountains humbled me. And today, I carry all those lessons into the work I do, helping others build, grow, and lead with clarity and purpose. Because no matter where we begin, every journey holds the power to inspire the next one."
+      content: "The journey shaped me. The struggles softened me. The mountains humbled me. Today, I carry those lessons into my work, helping others build, grow, and lead with clarity and purpose. Because no matter where we begin, every journey has the power to inspire the next."
     }
   ];
 
@@ -91,7 +86,7 @@ const Story: React.FC = () => {
                   {chapter.title}
                 </h3>
                 
-                <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium group-hover:text-white transition-colors duration-500">
+                <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium group-hover:text-white transition-colors duration-500 whitespace-pre-line">
                   {chapter.content}
                 </p>
               </motion.div>

@@ -6,6 +6,7 @@ import Hero from './components/Hero';
 import Story from './components/Story';
 import About from './components/About';
 import Services from './components/Services';
+import Partners from './components/Partners';
 import Stats from './components/Stats';
 import Background from './components/Background';
 import Navbar from './components/Navbar';
@@ -49,16 +50,16 @@ const App: React.FC = () => {
   useEffect(() => {
     const handleLocationChange = () => {
       const path = window.location.pathname;
-      if (path.includes('/about')) {
+      if (path.startsWith('/about')) {
         setView('about');
-      } else if (path.includes('/podcast')) {
+      } else if (path.startsWith('/podcast')) {
         setView('podcast');
+      } else if (path.startsWith('/speaking')) {
+        setView('speaking');
+      } else if (path.startsWith('/supply-chain')) {
+        setView('supply-chain');
       } else {
-        // Default to home. Redirect speaking and supply-chain to home.
         setView('home');
-        if (path.includes('/speaking') || path.includes('/supply-chain')) {
-            window.history.replaceState({}, '', '/');
-        }
       }
     };
 
@@ -83,19 +84,14 @@ const App: React.FC = () => {
 
   const navigate = (path: string) => {
     let newView: 'home' | 'about' | 'speaking' | 'supply-chain' | 'podcast' = 'home';
-    let finalPath = path;
     
-    if (path === '/about') newView = 'about';
-    else if (path === '/podcast') newView = 'podcast';
-    // Redirect logic: Point speaking and supply-chain to home
-    else if (path === '/speaking' || path === '/supply-chain') {
-        newView = 'home';
-        finalPath = '/';
-    }
+    if (path.startsWith('/about')) newView = 'about';
+    else if (path.startsWith('/podcast')) newView = 'podcast';
+    else if (path.startsWith('/speaking')) newView = 'speaking';
+    else if (path.startsWith('/supply-chain')) newView = 'supply-chain';
 
     setView(newView);
-    window.history.pushState({}, '', finalPath);
-    // The useEffect above will handle the scrolling to top
+    window.history.pushState({}, '', path);
   };
 
   // Derive currentPath for Navbar active states
@@ -132,6 +128,7 @@ const App: React.FC = () => {
                   <Hero />
                   <Story />
                   <Services />
+                  <Partners />
                   <Stats />
                 </>
               )}

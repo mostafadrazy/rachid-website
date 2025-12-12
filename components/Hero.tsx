@@ -150,7 +150,7 @@ const Hero: React.FC = () => {
                 </MagneticButton>
                 
                 <MagneticButton href="#contact" className="group px-8 py-4 md:px-10 md:py-5 border-2 border-white/20 text-white font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-white/10 backdrop-blur-sm hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2 min-w-[200px] md:min-w-[240px] rounded-sm">
-                    Book a one to one <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform stroke-[3px]" />
+                    Reach Out <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform stroke-[3px]" />
                 </MagneticButton>
 
             </motion.div>

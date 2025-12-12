@@ -104,11 +104,11 @@ const Stats: React.FC = () => {
                 transition={{ delay: idx * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="group border-b border-white/10 py-12 hover:bg-white/5 transition-colors px-4 md:px-8 relative"
               >
-                <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
                   <span className="text-5xl md:text-7xl lg:text-8xl font-bold font-['Oswald'] text-white tracking-tighter group-hover:text-blue-500 transition-colors">
                     <AnimatedNumber value={stat.value} suffix={stat.suffix} />
                   </span>
-                  <div className="text-right md:text-left">
+                  <div className="text-right">
                     <span className="block text-xl font-bold uppercase tracking-wider text-white mb-1">{stat.label}</span>
                     <span className="block text-sm text-gray-500 font-mono uppercase tracking-widest">{stat.sub}</span>
                   </div>
