@@ -18,10 +18,13 @@ import Podcast from './components/Podcast';
 import Blog from './components/Blog';
 import Admin from './components/Admin';
 import Contact from './components/Contact';
+import NotFound from './components/NotFound';
+
+type ViewType = 'home' | 'about' | 'speaking' | 'supply-chain' | 'podcast' | 'blog' | 'admin' | 'contact' | '404';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<'home' | 'about' | 'speaking' | 'supply-chain' | 'podcast' | 'blog' | 'admin' | 'contact'>('home');
+  const [view, setView] = useState<ViewType>('home');
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -54,7 +57,8 @@ const App: React.FC = () => {
       else if (path === '/blog') setView('blog');
       else if (path === '/admin') setView('admin');
       else if (path === '/contact') setView('contact');
-      else setView('home');
+      else if (path === '/') setView('home');
+      else setView('404');
     };
 
     handleLocationChange();
@@ -70,7 +74,7 @@ const App: React.FC = () => {
   }, [view]);
 
   const navigate = (path: string) => {
-    let newView: any = 'home';
+    let newView: ViewType = 'home';
     if (path === '/about') newView = 'about';
     else if (path === '/speaking') newView = 'speaking';
     else if (path === '/supply-chain') newView = 'supply-chain';
@@ -78,6 +82,7 @@ const App: React.FC = () => {
     else if (path === '/blog') newView = 'blog';
     else if (path === '/admin') newView = 'admin';
     else if (path === '/contact') newView = 'contact';
+    else if (path !== '/') newView = '404';
 
     setView(newView);
     window.history.pushState({}, '', path);
@@ -85,6 +90,7 @@ const App: React.FC = () => {
 
   const getCurrentPath = () => {
     if (view === 'home') return '/';
+    if (view === '404') return window.location.pathname;
     return `/${view}`;
   };
 
@@ -107,6 +113,7 @@ const App: React.FC = () => {
               {view === 'blog' && <Blog />}
               {view === 'admin' && <Admin />}
               {view === 'contact' && <Contact />}
+              {view === '404' && <NotFound />}
               {view === 'home' && (
                 <>
                   <Hero />
