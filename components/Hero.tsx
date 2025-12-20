@@ -26,7 +26,8 @@ const MagneticButton: React.FC<{
   children: React.ReactNode; 
   href: string; 
   className?: string;
-}> = ({ children, href, className }) => {
+  onClick?: (e: React.MouseEvent) => void;
+}> = ({ children, href, className, onClick }) => {
   const ref = useRef<HTMLAnchorElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -52,6 +53,7 @@ const MagneticButton: React.FC<{
     <motion.a
       ref={ref}
       href={href}
+      onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       animate={{ x, y }}
@@ -73,6 +75,12 @@ const Hero: React.FC = () => {
 
   const yText = useTransform(scrollYProgress, [0, 1], [0, 50]);
   const opacityText = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -149,7 +157,11 @@ const Hero: React.FC = () => {
                     </span>
                 </MagneticButton>
                 
-                <MagneticButton href="#contact" className="group px-8 py-4 md:px-10 md:py-5 border-2 border-white/20 text-white font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-white/10 backdrop-blur-sm hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2 min-w-[200px] md:min-w-[240px] rounded-sm">
+                <MagneticButton 
+                  href="/contact" 
+                  onClick={(e) => handleNavigate(e, '/contact')}
+                  className="group px-8 py-4 md:px-10 md:py-5 border-2 border-white/20 text-white font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-white/10 backdrop-blur-sm hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2 min-w-[200px] md:min-w-[240px] rounded-sm"
+                >
                     Reach Out <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform stroke-[3px]" />
                 </MagneticButton>
 

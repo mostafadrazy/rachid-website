@@ -87,6 +87,12 @@ const Podcast: React.FC = () => {
 
   const yParallax = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   return (
     <section id="podcast" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-32 pb-24 overflow-hidden perspective-1000">
       
@@ -316,12 +322,20 @@ const Podcast: React.FC = () => {
               </p>
 
               <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                 <button className="px-10 py-5 bg-blue-600 text-white font-bold uppercase tracking-widest text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/25">
+                 <a 
+                   href="/contact"
+                   onClick={(e) => handleNavigate(e, '/contact')}
+                   className="px-10 py-5 bg-blue-600 text-white font-bold uppercase tracking-widest text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/25 inline-block"
+                 >
                     Subscribe to Alerts
-                 </button>
-                 <button className="px-10 py-5 border border-white/20 text-white font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-all flex items-center gap-2">
+                 </a>
+                 <a 
+                   href="/contact"
+                   onClick={(e) => handleNavigate(e, '/contact')}
+                   className="px-10 py-5 border border-white/20 text-white font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-all flex items-center gap-2 inline-block"
+                 >
                     Nominate a Guest <Share2 size={16} />
-                 </button>
+                 </a>
               </div>
            </motion.div>
         </div>

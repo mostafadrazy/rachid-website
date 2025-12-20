@@ -77,6 +77,12 @@ const PartnerCard: React.FC<{ partner: typeof partners[0] }> = ({ partner }) => 
 };
 
 const Partners: React.FC = () => {
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   return (
     <section id="partners" className="bg-[#050505] py-32 relative overflow-hidden">
       {/* Background Decor: Scanning Light Beam */}
@@ -138,7 +144,8 @@ const Partners: React.FC = () => {
       <div className="container mx-auto px-6 md:px-12 mt-20 relative z-10 flex justify-center">
          <motion.a 
            whileHover={{ scale: 1.05 }}
-           href="#contact" 
+           href="/contact" 
+           onClick={(e) => handleNavigate(e, '/contact')}
            className="group flex items-center gap-6 px-8 py-4 bg-white/5 border border-white/10 hover:border-blue-500/50 backdrop-blur-md transition-all duration-300"
          >
             <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 group-hover:text-white transition-colors">

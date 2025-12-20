@@ -66,6 +66,12 @@ const Stats: React.FC = () => {
     }
   ];
 
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   return (
     <section id="stats" className="py-32 bg-[#050505] text-white relative overflow-hidden border-t border-white/5">
       {/* Ambient Glow */}
@@ -88,7 +94,11 @@ const Stats: React.FC = () => {
                <p className="text-lg text-gray-400 font-medium leading-relaxed border-l-4 border-blue-600 pl-6 mb-10">
                  Real impact isn't just about the destination. It's about the growth, reach, and resilience built along the way.
                </p>
-               <a href="#contact" className="inline-block border border-white/20 text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-blue-600 hover:border-blue-600 transition-all">
+               <a 
+                href="/contact" 
+                onClick={(e) => handleNavigate(e, '/contact')}
+                className="inline-block border border-white/20 text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-blue-600 hover:border-blue-600 transition-all"
+               >
                  Let's Work Together
                </a>
              </motion.div>

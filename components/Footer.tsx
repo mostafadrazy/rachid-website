@@ -16,6 +16,12 @@ const TikTokIcon = () => (
 );
 
 const Footer: React.FC = () => {
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   return (
     <footer id="contact" className="bg-[#050505] text-white pt-32 pb-12 border-t border-white/10 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 relative z-10">
@@ -34,7 +40,11 @@ const Footer: React.FC = () => {
            <div className="flex flex-col items-center lg:items-end gap-10 lg:pb-2">
              
              {/* CTA Button */}
-             <a href="mailto:contact@example.com" className="group flex items-center gap-4 text-2xl md:text-3xl font-bold font-['Syne'] bg-white text-black px-8 py-4 hover:bg-blue-600 hover:text-white transition-all duration-300 rounded-sm shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-blue-900/50">
+             <a 
+              href="/contact" 
+              onClick={(e) => handleNavigate(e, '/contact')}
+              className="group flex items-center gap-4 text-2xl md:text-3xl font-bold font-['Syne'] bg-white text-black px-8 py-4 hover:bg-blue-600 hover:text-white transition-all duration-300 rounded-sm shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-blue-900/50"
+             >
                Reach Out <ArrowUpRight className="w-8 h-8 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
              </a>
 

@@ -41,6 +41,12 @@ const IndustryCard: React.FC<{ icon: React.ReactNode; label: string }> = ({ icon
 );
 
 const SupplyChain: React.FC = () => {
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   return (
     <section id="supply-chain" className="relative bg-[#050505] text-white min-h-screen flex flex-col">
       
@@ -203,7 +209,11 @@ const SupplyChain: React.FC = () => {
                <span className="text-blue-600 font-bold tracking-widest uppercase text-xs mb-2 block">Sectors</span>
                <h2 className="text-5xl font-bold uppercase font-['Oswald']">Industries I Support</h2>
              </div>
-             <a href="#contact" className="px-8 py-4 border border-white/20 hover:bg-white hover:text-black transition-all uppercase font-bold text-sm flex items-center gap-2">
+             <a 
+              href="/contact" 
+              onClick={(e) => handleNavigate(e, '/contact')}
+              className="px-8 py-4 border border-white/20 hover:bg-white hover:text-black transition-all uppercase font-bold text-sm flex items-center gap-2"
+             >
                Start Transformation <ArrowRight size={16} />
              </a>
            </div>

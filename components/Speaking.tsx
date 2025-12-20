@@ -77,6 +77,12 @@ const Speaking: React.FC = () => {
 
   const yParallax = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   return (
     <section id="speaking" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-32 pb-24 overflow-hidden">
       
@@ -149,7 +155,11 @@ const Speaking: React.FC = () => {
                 My talks are not theoretical. They come from the trenches: customer meetings, warehouses, mountains, airports, and boardrooms. I bring the dust of the road into the clarity of the stage.
               </p>
             </div>
-            <a href="#contact" className="inline-flex items-center gap-2 text-blue-500 uppercase tracking-widest font-bold text-sm hover:text-white transition-colors">
+            <a 
+              href="/contact" 
+              onClick={(e) => handleNavigate(e, '/contact')}
+              className="inline-flex items-center gap-2 text-blue-500 uppercase tracking-widest font-bold text-sm hover:text-white transition-colors"
+            >
               Inquire for your event <ArrowRight size={16} />
             </a>
           </motion.div>
