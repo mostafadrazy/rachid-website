@@ -13,7 +13,9 @@
     "react": "^19.2.0",
     "lucide-react": "^0.554.0",
     "framer-motion": "^12.23.24",
-    "lenis": "1.1.14"
+    "lenis": "1.1.14",
+    "@google/genai": "^1.34.0",
+    "@supabase/supabase-js": "2"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
