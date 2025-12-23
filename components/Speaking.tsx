@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Mic, Users, Calendar, ArrowRight, Radio, MonitorPlay } from 'lucide-react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { Mic, Users, Calendar, ArrowRight, Radio, MonitorPlay, Zap, Sparkles } from 'lucide-react';
 
 const ShapeDivider: React.FC = () => (
   <div className="flex items-center justify-center py-24 opacity-30">
@@ -23,14 +23,12 @@ const KeynoteCard: React.FC<{
     viewport={{ once: true, margin: "-50px" }}
     className="group relative grid grid-cols-1 lg:grid-cols-12 gap-8 py-12 border-b border-white/10 hover:bg-white/5 transition-colors duration-500 px-4 lg:px-8"
   >
-    {/* Number */}
     <div className="lg:col-span-2">
        <span className="text-5xl md:text-6xl font-['Oswald'] font-bold text-transparent text-stroke group-hover:text-blue-600 group-hover:text-stroke-0 transition-all duration-500 opacity-50">
          {number}
        </span>
     </div>
 
-    {/* Content */}
     <div className="lg:col-span-10 space-y-4">
       <h3 className="text-3xl md:text-4xl font-bold uppercase font-['Oswald'] text-white group-hover:text-blue-100 transition-colors">
         {title}
@@ -49,7 +47,6 @@ const KeynoteCard: React.FC<{
       )}
     </div>
     
-    {/* Hover Indicator */}
     <div className="absolute right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-4 group-hover:translate-x-0">
        <ArrowRight className="text-blue-600 w-8 h-8" />
     </div>
@@ -72,10 +69,13 @@ const Speaking: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"]
+    offset: ["start start", "end start"]
   });
 
-  const yParallax = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const yParallax = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const yImage = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const opacityHero = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+  const scaleHero = useTransform(scrollYProgress, [0, 0.4], [1, 0.95]);
 
   const handleNavigate = (e: React.MouseEvent, path: string) => {
     e.preventDefault();
@@ -84,42 +84,98 @@ const Speaking: React.FC = () => {
   };
 
   return (
-    <section id="speaking" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-32 pb-24 overflow-hidden">
+    <section id="speaking" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-20 pb-24 overflow-hidden">
       
-      {/* Background Noise/Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[80vh] bg-blue-900/5 blur-[120px] pointer-events-none rounded-full" />
-
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
+      {/* --- CINEMATIC HERO WITH BACKGROUND IMAGE --- */}
+      <div className="relative h-screen flex items-center justify-center overflow-hidden">
         
-        {/* Hero Section */}
-        <div className="text-center max-w-5xl mx-auto mb-32">
-          <motion.span 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs mb-6 block"
-          >
-            From The Trenches To The Stage
-          </motion.span>
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold uppercase font-['Oswald'] leading-[0.9] mb-10"
-          >
-            Lessons From <br /> 
-            <span className="text-transparent text-stroke-blue">Discomfort,</span> <br />
-            Decision-Making, & <br />
-            <span className="text-white">Transformation</span>
-          </motion.h1>
+        {/* Background Image Layer */}
+        <motion.div 
+          style={{ y: yImage, opacity: opacityHero }}
+          className="absolute inset-0 z-0"
+        >
+          <img 
+            src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1763748388/WhatsApp_Image_2025-11-21_at_18.28.58_4a51f166_jwqpmm.jpg" 
+            alt="Speaking Background" 
+            className="w-full h-full object-cover grayscale opacity-30"
+          />
+          {/* Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-[#050505]/90"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505]"></div>
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
+        </motion.div>
+
+        {/* Spatial Grid Elements */}
+        <div className="absolute inset-0 pointer-events-none z-10">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:60px_60px] opacity-20"></div>
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-900/10 rounded-full blur-[120px] animate-pulse"></div>
         </div>
 
+        <motion.div 
+          style={{ opacity: opacityHero, scale: scaleHero }}
+          className="container mx-auto px-6 relative z-20"
+        >
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center text-center"
+          >
+            <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-blue-600/30 bg-blue-600/5 backdrop-blur-md mb-10 shadow-[0_0_40px_rgba(37,99,235,0.15)] group hover:border-blue-500 transition-all">
+               <Sparkles size={14} className="text-blue-500" />
+               <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-400">Global Keynote Speaker</span>
+            </div>
+
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold uppercase font-['Oswald'] leading-[0.9] tracking-tighter text-white drop-shadow-2xl max-w-6xl mx-auto">
+              <span className="block mb-2">Lessons From</span>
+              <span className="text-transparent text-stroke-blue hover:text-white transition-all duration-700 block mb-2">Discomfort,</span>
+              <span className="block mb-2">Decision-Making &</span>
+              <span className="text-blue-600 relative inline-block">
+                Transformation
+                <motion.span 
+                  initial={{ width: 0 }}
+                  whileInView={{ width: '100%' }}
+                  transition={{ delay: 0.5, duration: 1 }}
+                  className="absolute -bottom-2 left-0 h-1 bg-blue-600/30 blur-sm rounded-full"
+                />
+              </span>
+            </h1>
+
+            <p className="text-lg md:text-xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed mt-12 mb-16">
+              Unfiltered insights on resilience, technology, and leadership from the front lines of MEA operations.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-6">
+               <a 
+                 href="/contact" 
+                 onClick={(e) => handleNavigate(e, '/contact')}
+                 className="group relative px-10 py-5 bg-white text-black font-bold uppercase tracking-[0.3em] text-[10px] rounded-sm hover:bg-blue-600 hover:text-white transition-all duration-500 shadow-xl"
+               >
+                 Book for 2026 <ArrowRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" size={14} />
+               </a>
+               <div className="flex flex-col items-start justify-center border-l border-white/10 pl-8">
+                  <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Priority Inquiries</span>
+                  <span className="text-[9px] text-blue-500 uppercase tracking-widest font-bold">Processed Daily</span>
+               </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Dynamic scroll indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 text-white/10">
+           <div className="w-[1px] h-20 bg-gradient-to-b from-blue-600 to-transparent"></div>
+           <span className="text-[7px] uppercase tracking-[0.6em] font-bold rotate-90 origin-left mt-10">Archive</span>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
         {/* Why I Speak - Zig Zag */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 items-center mb-48 pt-32">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="relative aspect-[3/4] border border-white/10 bg-[#0a0a0a] overflow-hidden group"
+            className="relative aspect-[3/4] border border-white/10 bg-[#0a0a0a] overflow-hidden group rounded-sm"
           >
              <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay z-10"></div>
              <motion.img 
@@ -140,14 +196,16 @@ const Speaking: React.FC = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold uppercase font-['Oswald']">Why I Speak</h2>
-            <div className="w-20 h-1 bg-blue-600"></div>
-            <p className="text-xl md:text-2xl font-['Syne'] font-bold text-white leading-normal">
+            <div className="space-y-4">
+              <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs block">Mission</span>
+              <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald'] leading-none">Why I <br/> Speak</h2>
+            </div>
+            <p className="text-2xl md:text-3xl font-['Syne'] font-bold text-white leading-tight">
               "Because stories move people. And people move companies."
             </p>
-            <div className="space-y-6 text-gray-400 font-light leading-relaxed">
+            <div className="space-y-6 text-gray-400 font-light leading-relaxed text-lg">
               <p>
                 I speak to share the leadership lessons learned from selling, hiking, failing, rising, negotiating, building teams, and digitizing supply chains across MEA.
               </p>
@@ -158,9 +216,9 @@ const Speaking: React.FC = () => {
             <a 
               href="/contact" 
               onClick={(e) => handleNavigate(e, '/contact')}
-              className="inline-flex items-center gap-2 text-blue-500 uppercase tracking-widest font-bold text-sm hover:text-white transition-colors"
+              className="group inline-flex items-center gap-4 text-blue-500 uppercase tracking-[0.4em] font-bold text-[10px] hover:text-white transition-all"
             >
-              Inquire for your event <ArrowRight size={16} />
+              Inquire for your event <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
             </a>
           </motion.div>
         </div>
@@ -168,10 +226,13 @@ const Speaking: React.FC = () => {
         <ShapeDivider />
 
         {/* Signature Keynotes */}
-        <div className="mb-32">
-           <div className="mb-16">
-             <h2 className="text-4xl md:text-6xl font-bold uppercase font-['Oswald'] mb-4">Signature Keynotes</h2>
-             <p className="text-gray-500 max-w-xl">Tailored for executives, supply chain leaders, and ambitious teams.</p>
+        <div className="mb-48">
+           <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/10 pb-12">
+             <div>
+               <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs block mb-4">Keynotes</span>
+               <h2 className="text-5xl md:text-8xl font-bold uppercase font-['Oswald'] leading-none text-white">Signature <br/> Themes</h2>
+             </div>
+             <p className="text-gray-500 max-w-sm text-sm font-light leading-relaxed">Strategic narratives tailored for high-stakes leadership environments.</p>
            </div>
 
            <div className="flex flex-col">
@@ -205,8 +266,12 @@ const Speaking: React.FC = () => {
         <ShapeDivider />
 
         {/* Speaking Formats */}
-        <div className="mb-24">
-           <h2 className="text-center text-4xl font-bold uppercase font-['Oswald'] mb-16">Speaking Formats</h2>
+        <div className="mb-32">
+           <div className="text-center mb-24">
+              <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs block mb-4">Availability</span>
+              <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald']">Formats</h2>
+           </div>
+           
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <FormatCard icon={<Mic size={24} />} label="Keynotes" />
               <FormatCard icon={<Users size={24} />} label="Panels" />
@@ -215,7 +280,6 @@ const Speaking: React.FC = () => {
               <FormatCard icon={<Radio size={24} />} label="Podcasts" />
            </div>
         </div>
-
       </div>
     </section>
   );

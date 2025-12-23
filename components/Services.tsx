@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Box, Layers, Globe, Mic, Users } from 'lucide-react';
+import { Box, Layers, Globe, Mic, Users, ArrowUpRight, Award } from 'lucide-react';
 
 const ServiceCard: React.FC<{
   title: string;
@@ -10,7 +10,8 @@ const ServiceCard: React.FC<{
   className?: string;
   delay?: number;
   image?: string;
-}> = ({ title, description, icon, className, delay = 0, image }) => (
+  link?: { text: string; href: string };
+}> = ({ title, description, icon, className, delay = 0, image, link }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -49,6 +50,17 @@ const ServiceCard: React.FC<{
       <p className="text-gray-300 text-lg leading-relaxed font-light opacity-80 group-hover:opacity-100 transition-opacity duration-500 max-w-sm">
         {description}
       </p>
+
+      {link && (
+        <a 
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 mt-8 px-5 py-2.5 border border-white/10 bg-white/5 hover:bg-blue-600 hover:border-blue-600 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 group/btn"
+        >
+          {link.text} <ArrowUpRight size={14} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+        </a>
+      )}
     </div>
   </motion.div>
 );
@@ -111,11 +123,15 @@ const Services: React.FC = () => {
           />
 
            <ServiceCard 
-            title="Storytelling" 
-            description="Sharing insights on AI, leadership, and the future of supply chain."
-            icon={<Mic size={28} />}
+            title="Forbes Council" 
+            description="Sharing insights on AI, leadership, and the future of supply chain, shaped by hands-on experience and contributions as a Forbes Technology Council member."
+            icon={<Award size={28} />}
             delay={0.4}
-            image="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=2070&auto=format&fit=crop"
+            image="https://res.cloudinary.com/dmnqlruhl/image/upload/v1766504150/FTC-Badge-Rectangle-BlackGradient_u62ba6.png"
+            link={{
+              text: "Forbes Technology Council Member",
+              href: "https://councils.forbes.com/profile/Rachid-Labrik-CEO-Slimstock-MEA/b3886bee-7748-4c0a-a847-428f8a2dbd8e"
+            }}
           />
 
         </div>

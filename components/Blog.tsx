@@ -115,7 +115,7 @@ const Blog: React.FC = () => {
           </h1>
 
           <div className="prose prose-invert max-w-none text-gray-400 text-lg leading-relaxed space-y-6 font-light">
-             {selectedPost.content.split('\n').map((para, i) => (
+             {(selectedPost.content || '').split('\n').map((para, i) => (
                <p key={i}>{para}</p>
              ))}
           </div>

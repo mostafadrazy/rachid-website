@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 
@@ -49,7 +50,7 @@ const Loader: React.FC<{ onLoadingComplete: () => void }> = ({ onLoadingComplete
         y: "-100%",
         transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } 
       }}
-      className="fixed inset-0 z-[9999] bg-[#050505] flex items-center justify-center cursor-none"
+      className="fixed inset-0 z-[9999] bg-[#050505] flex items-center justify-center"
     >
       <div className="relative overflow-hidden px-4 md:px-12 py-4 flex justify-center items-center w-full">
         <AnimatePresence mode="wait">

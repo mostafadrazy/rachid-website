@@ -116,10 +116,10 @@ const About: React.FC = () => {
                  
                  <div className="space-y-8 text-lg text-gray-300 font-light leading-relaxed">
                     <p>
-                      I became who I am through persistence, discomfort, and endless reinvention. I grew up in Morocco in a home filled with love, simplicity, and quiet strength. I watched my family work hard with limited means but limitless dignity.
+                      I became who I am through persistence, discomfort, and endless reinvention. I grew up in Morocco, in a home filled with love, simplicity, and quiet strength. I watched my family work hard with limited means, but limitless dignity.
                     </p>
                     <p>
-                      When I opened a shop as a child, my grandmother stood beside me. She taught me that business is not about selling. It’s about serving. <span className="text-white font-medium">Those moments shaped my leadership far more than any boardroom ever could.</span>
+                      When I was helping my grandfather in his shop, he taught me that business is not about selling. It is about serving. <span className="text-white font-medium">Those moments shaped my leadership far more than any boardroom ever could.</span>
                     </p>
                     
                     {/* Quote Block */}

@@ -56,7 +56,7 @@ const Stats: React.FC = () => {
       value: "Host",
       suffix: "",
       label: "Podcast",
-      sub: "\"0toN\""
+      sub: "\"0 to n\""
     },
     {
       value: "Global",

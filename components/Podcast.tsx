@@ -1,9 +1,8 @@
 
-import React, { useRef, useState } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
-import { Mic, Globe, Heart, Radio, Users, CirclePlay, ArrowRight, Activity, Headphones, Target, Layers, Cast, Play, Share2 } from 'lucide-react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Mic, Globe, Radio, Users, CirclePlay, ArrowRight, Activity, Headphones, Target, Layers, Cast, Play, Share2 } from 'lucide-react';
 
-// --- Brand Icons ---
 const SpotifyIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.4-1.02 15.6 1.44.539.3.719.96.418 1.5-.299.48-.96.66-1.439.36z"/>
@@ -25,43 +24,8 @@ const YouTubeIcon = () => (
   </svg>
 );
 
-// --- 3D Tilt Card Component ---
-const Tilt3DCard: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
-  const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
-
-  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    x.set((clientX - left - width / 2) / 25);
-    y.set((clientY - top - height / 2) / 25);
-  }
-
-  return (
-    <motion.div
-      onMouseMove={onMouseMove}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
-      style={{
-        rotateX: mouseY,
-        rotateY: mouseX,
-        transformStyle: "preserve-3d",
-      }}
-      className={`relative transition-all duration-200 ease-out ${className}`}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-// --- Visual Components ---
-
 const AudioWaveParams: React.FC = () => (
-    <div className="absolute inset-0 flex items-end justify-center gap-2 opacity-20 pointer-events-none mask-image-gradient-to-t">
+    <div className="absolute inset-0 flex items-end justify-center gap-2 opacity-20 pointer-events-none">
         {[...Array(20)].map((_, i) => (
             <motion.div 
                 key={i}
@@ -94,7 +58,7 @@ const Podcast: React.FC = () => {
   };
 
   return (
-    <section id="podcast" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-32 pb-24 overflow-hidden perspective-1000">
+    <section id="podcast" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-32 pb-24 overflow-hidden">
       
       {/* Background Image Layer */}
       <div className="absolute inset-0 z-0">
@@ -103,16 +67,13 @@ const Podcast: React.FC = () => {
               alt="Podcast Background" 
               className="w-full h-full object-cover opacity-20"
           />
-          {/* Gradients to fade image into background */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-[#050505]/50"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#050505]/50 to-transparent"></div>
       </div>
 
-      {/* Deep Space Background Effects */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
          <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-900/10 rounded-full blur-[150px] mix-blend-screen"></div>
          <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[150px] mix-blend-screen"></div>
-         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
       </div>
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
@@ -144,7 +105,6 @@ const Podcast: React.FC = () => {
                <span className="text-white font-medium">Strategic. Human. Future-Ready.</span>
              </p>
 
-             {/* Floating Glass Dock */}
              <motion.div 
                initial={{ y: 50, opacity: 0 }}
                animate={{ y: 0, opacity: 1 }}
@@ -170,7 +130,7 @@ const Podcast: React.FC = () => {
         </div>
 
 
-        {/* --- THE MISSION (Spatial Split) --- */}
+        {/* --- THE MISSION --- */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-48">
            <div className="order-2 lg:order-1 relative">
               <motion.div 
@@ -192,7 +152,6 @@ const Podcast: React.FC = () => {
                     </div>
                  </div>
               </motion.div>
-              {/* Decorative backplate */}
               <div className="absolute -top-6 -left-6 w-full h-full border border-blue-600/20 -z-10"></div>
            </div>
 
@@ -211,7 +170,7 @@ const Podcast: React.FC = () => {
                    { title: "Future Focused", desc: "AI, automation, and the next decade." }
                  ].map((item, i) => (
                    <div key={i} className="flex items-start gap-4 md:gap-6 group">
-                      <div className="mt-1 md:mt-2 w-2 h-2 md:w-3 md:h-3 bg-blue-600 rounded-full group-hover:scale-150 transition-transform shrink-0"></div>
+                      <div className="mt-1 md:mt-2 w-2 h-2 md:w-3 md:h-3 bg-blue-600 rounded-full shrink-0"></div>
                       <div>
                         <h4 className="text-lg md:text-3xl font-bold uppercase font-['Oswald'] text-white mb-2">{item.title}</h4>
                         <p className="text-sm md:text-xl text-gray-500 group-hover:text-gray-400 transition-colors font-light">{item.desc}</p>
@@ -223,14 +182,14 @@ const Podcast: React.FC = () => {
         </div>
 
 
-        {/* --- 3D PRINCIPLES --- */}
+        {/* --- CORE FREQUENCIES --- */}
         <div className="mb-48">
            <div className="text-center mb-20">
               <h2 className="text-5xl font-bold uppercase font-['Oswald'] mb-6">Core Frequencies</h2>
               <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 perspective-1000">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { 
                   icon: <Target size={32} />, 
@@ -248,28 +207,26 @@ const Podcast: React.FC = () => {
                   desc: "Connecting the dots between technology, people, and process. How to build engines that last." 
                 }
               ].map((card, i) => (
-                <Tilt3DCard key={i} className="h-full">
-                   <div className="h-full p-10 bg-[#0a0a0a] border border-white/10 hover:border-blue-600/50 transition-colors group flex flex-col relative overflow-hidden">
-                      <div className="absolute top-0 right-0 p-24 bg-blue-600/5 blur-3xl rounded-full group-hover:bg-blue-600/10 transition-all"></div>
-                      
-                      <div className="mb-8 p-4 bg-white/5 w-fit rounded-xl text-blue-500 group-hover:text-white group-hover:bg-blue-600 transition-all shadow-lg shadow-blue-900/20">
-                        {card.icon}
-                      </div>
-                      
-                      <h3 className="text-3xl font-bold uppercase font-['Oswald'] mb-4 text-white group-hover:text-blue-200 transition-colors">{card.title}</h3>
-                      <p className="text-gray-400 leading-relaxed text-sm font-light group-hover:text-gray-300">{card.desc}</p>
-                      
-                      <div className="mt-auto pt-8 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-600 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
-                        Explore <ArrowRight size={12} />
-                      </div>
+                <div key={i} className="h-full p-10 bg-[#0a0a0a] border border-white/10 hover:border-blue-600/50 transition-colors group flex flex-col relative overflow-hidden">
+                   <div className="absolute top-0 right-0 p-24 bg-blue-600/5 blur-3xl rounded-full group-hover:bg-blue-600/10 transition-all"></div>
+                   
+                   <div className="mb-8 p-4 bg-white/5 w-fit rounded-xl text-blue-500 group-hover:text-white group-hover:bg-blue-600 transition-all">
+                     {card.icon}
                    </div>
-                </Tilt3DCard>
+                   
+                   <h3 className="text-3xl font-bold uppercase font-['Oswald'] mb-4 text-white group-hover:text-blue-200 transition-colors">{card.title}</h3>
+                   <p className="text-gray-400 leading-relaxed text-sm font-light group-hover:text-gray-300">{card.desc}</p>
+                   
+                   <div className="mt-auto pt-8 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-600 opacity-0 group-hover:opacity-100 transition-all">
+                     Explore <ArrowRight size={12} />
+                   </div>
+                </div>
               ))}
            </div>
         </div>
 
 
-        {/* --- EPISODE ANATOMY (Redesigned) --- */}
+        {/* --- EPISODE ANATOMY --- */}
         <div className="mb-48 relative">
            <div className="mb-20">
               <span className="text-blue-600 font-bold tracking-[0.2em] uppercase text-xs mb-4 block">The Blueprint</span>
@@ -285,11 +242,8 @@ const Podcast: React.FC = () => {
                 { step: "05", label: "Future", desc: "The vision ahead." },
               ].map((item, i) => (
                 <div key={i} className="group relative border-t border-b border-r border-white/10 first:border-l p-10 h-[400px] flex flex-col justify-between hover:bg-[#0a0a0a] transition-all duration-500">
-                   {/* Background Hover Effect */}
-                   <div className="absolute inset-0 bg-gradient-to-b from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                   
                    <div className="flex flex-col gap-2">
-                      <span className="text-sm font-bold text-blue-600 opacity-0 group-hover:opacity-100 transform -translate-y-2 group-hover:translate-y-0 transition-all duration-500">Step</span>
+                      <span className="text-sm font-bold text-blue-600 opacity-0 group-hover:opacity-100 transition-all">Step</span>
                       <span className="text-6xl font-['Oswald'] font-bold text-white/10 group-hover:text-white transition-colors duration-500">{item.step}</span>
                    </div>
 

@@ -1,70 +1,7 @@
 
-import React, { useRef, useState } from 'react';
-import { motion, useScroll, useTransform, Variants, useSpring, useVelocity } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, Variants } from 'framer-motion';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
-
-// --- Kinetic Text Component ---
-const KineticText: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => {
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400
-  });
-  // Skew based on velocity
-  const skewX = useTransform(smoothVelocity, [-1000, 1000], [-5, 5]);
-
-  return (
-    <motion.div style={{ skewX }} className={className}>
-      {children}
-    </motion.div>
-  );
-};
-
-// --- Magnetic Button Component ---
-const MagneticButton: React.FC<{ 
-  children: React.ReactNode; 
-  href: string; 
-  className?: string;
-  onClick?: (e: React.MouseEvent) => void;
-}> = ({ children, href, className, onClick }) => {
-  const ref = useRef<HTMLAnchorElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
-    
-    const { clientX, clientY } = e;
-    const { height, width, left, top } = ref.current.getBoundingClientRect();
-    // Calculate distance from center
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    // Move button slightly towards cursor (magnetic effect)
-    setPosition({ x: middleX * 0.3, y: middleY * 0.3 });
-  };
-
-  const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
-  };
-
-  const { x, y } = position;
-
-  return (
-    <motion.a
-      ref={ref}
-      href={href}
-      onClick={onClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{ x, y }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-      className={className}
-    >
-      {children}
-    </motion.a>
-  );
-};
-
 
 const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -131,8 +68,7 @@ const Hero: React.FC = () => {
           animate="visible"
           className="flex flex-col items-center text-center max-w-6xl mx-auto"
         >
-            {/* Main Headline with Kinetic Typography */}
-            <KineticText className="mb-6 md:mb-8">
+            <div className="mb-6 md:mb-8">
               <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold font-['Oswald'] text-white leading-[0.9] tracking-tight drop-shadow-2xl uppercase">
                 I Build <span className="text-transparent text-stroke-blue hover:text-white transition-colors duration-500">Systems</span>,<br />
                 Stories, and <br/>
@@ -141,29 +77,30 @@ const Hero: React.FC = () => {
                   <span className="absolute -bottom-2 left-0 w-full h-1 bg-blue-600/30 blur-sm"></span>
                 </span>
               </motion.h1>
-            </KineticText>
+            </div>
 
-            {/* Subheadline */}
             <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium max-w-3xl md:max-w-4xl mb-8 md:mb-12 leading-relaxed px-4">
               From a small village on the south of Morocco to leading transformations across continents, my mission is simple: <span className="font-bold text-blue-600">Build, Elevate, and Inspire.</span>
             </motion.p>
 
-            {/* Magnetic Buttons */}
             <motion.div variants={itemVariants} className="flex flex-col md:flex-row gap-4 md:gap-6 w-full md:w-auto justify-center items-center">
                 
-                <MagneticButton href="#story" className="group relative px-8 py-4 md:px-10 md:py-5 bg-white text-black font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-blue-600 hover:text-white transition-all duration-300 overflow-hidden min-w-[200px] md:min-w-[240px] flex justify-center items-center shadow-[0_0_30px_rgba(255,255,255,0.15)] rounded-sm">
+                <a 
+                  href="#story" 
+                  className="group relative px-8 py-4 md:px-10 md:py-5 bg-white text-black font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-blue-600 hover:text-white transition-all duration-300 overflow-hidden min-w-[200px] md:min-w-[240px] flex justify-center items-center shadow-[0_0_30px_rgba(255,255,255,0.15)] rounded-sm"
+                >
                     <span className="relative z-10 flex items-center gap-2">
                         Explore My Journey 
                     </span>
-                </MagneticButton>
+                </a>
                 
-                <MagneticButton 
+                <a 
                   href="/contact" 
                   onClick={(e) => handleNavigate(e, '/contact')}
                   className="group px-8 py-4 md:px-10 md:py-5 border-2 border-white/20 text-white font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-white/10 backdrop-blur-sm hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2 min-w-[200px] md:min-w-[240px] rounded-sm"
                 >
                     Reach Out <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform stroke-[3px]" />
-                </MagneticButton>
+                </a>
 
             </motion.div>
 
