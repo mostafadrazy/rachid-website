@@ -54,26 +54,17 @@ const Blog: React.FC = () => {
 
   if (configError) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-6 pt-32">
+      <div className="min-h-screen bg-black flex items-center justify-center p-6 pt-32 text-white">
         <div className="max-w-2xl w-full glass p-12 border border-blue-500/20 text-center">
           <Database size={48} className="text-blue-500 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold font-['Oswald'] uppercase mb-4 text-white">Database Link Required</h2>
+          <h2 className="text-3xl font-bold font-['Oswald'] uppercase mb-4">Database Link Required</h2>
           <p className="text-gray-400 mb-8 leading-relaxed">
             The archive system is ready, but it needs a valid Supabase connection. 
-            Please update your credentials in <code className="text-blue-400">components/supabaseClient.ts</code>.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <a 
-              href="https://supabase.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-blue-600 text-white font-bold uppercase tracking-widest text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
-            >
-              Open Supabase <ExternalLink size={14} />
-            </a>
             <button 
               onClick={() => window.location.reload()}
-              className="px-8 py-3 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all"
+              className="px-8 py-3 bg-blue-600 text-white font-bold uppercase tracking-widest text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
             >
               Retry Sync
             </button>
@@ -88,7 +79,7 @@ const Blog: React.FC = () => {
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }}
-        className="min-h-screen bg-black pt-32 pb-20"
+        className="min-h-screen bg-black pt-32 pb-20 text-white"
       >
         <div className="container mx-auto px-6 md:px-12 max-w-4xl">
           <button 
@@ -99,46 +90,61 @@ const Blog: React.FC = () => {
             <span className="text-xs font-bold uppercase tracking-widest">Back to Archive</span>
           </button>
 
-          <div className="relative aspect-video w-full mb-12 rounded-sm overflow-hidden border border-white/10">
+          <div className="relative aspect-video w-full mb-12 rounded-sm overflow-hidden border border-white/10 shadow-2xl">
             <img src={selectedPost.image_url} className="w-full h-full object-cover" alt="" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
           </div>
 
           <div className="flex items-center gap-6 mb-8 text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">
-            <span className="flex items-center gap-2 text-blue-500"><Tag size={12}/> {selectedPost.category}</span>
+            <span className="flex items-center gap-2 text-blue-500 bg-blue-600/10 px-3 py-1 border border-blue-600/20"><Tag size={12}/> {selectedPost.category}</span>
             <span className="flex items-center gap-2"><Calendar size={12}/> {new Date(selectedPost.created_at).toLocaleDateString()}</span>
             <span className="flex items-center gap-2"><Clock size={12}/> {selectedPost.read_time}</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold font-['Oswald'] uppercase leading-none mb-12 text-white">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-['Oswald'] uppercase leading-[0.9] tracking-tighter mb-12 text-white">
             {selectedPost.title}
           </h1>
 
-          <div className="prose prose-invert max-w-none text-gray-400 text-lg leading-relaxed space-y-6 font-light">
-             {(selectedPost.content || '').split('\n').map((para, i) => (
-               <p key={i}>{para}</p>
-             ))}
-          </div>
+          <div 
+            className="prose-container prose prose-invert max-w-none text-gray-300 text-lg leading-relaxed font-light"
+            dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+          />
           
-          <div className="mt-20 pt-12 border-t border-white/10 flex justify-between items-center">
-             <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold">R</div>
+          <div className="mt-24 pt-12 border-t border-white/10 flex justify-between items-center">
+             <div className="flex items-center gap-6">
+                <div className="w-14 h-14 rounded-full border border-blue-600 p-1">
+                  <div className="w-full h-full bg-blue-600 rounded-full flex items-center justify-center font-bold text-xl">R</div>
+                </div>
                 <div>
-                   <p className="text-xs font-bold uppercase tracking-widest">Rachid</p>
-                   <p className="text-[10px] text-gray-500">Supply Chain Leader</p>
+                   <p className="text-sm font-bold uppercase tracking-widest">Rachid</p>
+                   <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Global Supply Chain Leader</p>
                 </div>
              </div>
-             <button className="p-3 border border-white/10 rounded-full hover:bg-white hover:text-black transition-all">
-                <Share2 size={16} />
+             <button className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 transition-all group">
+                <Share2 size={16} className="group-hover:scale-110 transition-transform" />
              </button>
           </div>
         </div>
+
+        <style dangerouslySetInnerHTML={{ __html: `
+          .prose-container h1, .prose-container h2, .prose-container h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; margin-top: 3rem; margin-bottom: 1.5rem; color: #fff; }
+          .prose-container h1 { font-size: 3rem; border-bottom: 1px solid rgba(37,99,235,0.2); padding-bottom: 1rem; }
+          .prose-container h2 { font-size: 2rem; color: #2563eb; }
+          .prose-container h3 { font-size: 1.5rem; }
+          .prose-container p { margin-bottom: 1.75rem; line-height: 1.9; }
+          .prose-container ul, .prose-container ol { margin-bottom: 2rem; margin-left: 1.5rem; }
+          .prose-container li { margin-bottom: 0.75rem; }
+          .prose-container img { margin: 3rem auto; border: 1px solid rgba(255,255,255,0.05); shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+          .prose-container a { color: #2563eb; font-weight: 600; transition: opacity 0.3s; }
+          .prose-container a:hover { opacity: 0.8; }
+          .prose-container blockquote { border-left: 4px solid #2563eb; padding-left: 2rem; margin: 3rem 0; font-family: 'Syne', sans-serif; font-size: 1.5rem; font-style: italic; color: #e5e7eb; }
+        `}} />
       </motion.div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black pt-32 pb-20 overflow-hidden relative">
+    <div className="min-h-screen bg-black pt-32 pb-20 overflow-hidden relative text-white">
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-900/5 rounded-full blur-[120px] pointer-events-none" />
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">

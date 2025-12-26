@@ -63,7 +63,7 @@ const Podcast: React.FC = () => {
       {/* Background Image Layer */}
       <div className="absolute inset-0 z-0">
           <img 
-              src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1763745408/SUD04_kepvhm.jpg" 
+              src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1766746478/IMG_0178_loq4p6.jpg" 
               alt="Podcast Background" 
               className="w-full h-full object-cover opacity-20"
           />
@@ -130,7 +130,7 @@ const Podcast: React.FC = () => {
         </div>
 
 
-        {/* --- THE MISSION --- */}
+        {/* --- SEASON 1: BUILDERS OF THE MEA FUTURE --- */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-48">
            <div className="order-2 lg:order-1 relative">
               <motion.div 
@@ -139,7 +139,7 @@ const Podcast: React.FC = () => {
               >
                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60"></div>
                  <img 
-                    src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1763745408/SUD04_kepvhm.jpg" 
+                    src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1766746478/IMG_0178_loq4p6.jpg" 
                     alt="Podcast Host" 
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-110"
                  />
@@ -156,27 +156,48 @@ const Podcast: React.FC = () => {
            </div>
 
            <div className="order-1 lg:order-2 space-y-10">
-              <div className="inline-block px-4 py-1 border border-blue-600/30 rounded-full text-blue-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">The Mission</div>
+              <div className="inline-block px-4 py-1 border border-blue-600/30 rounded-full text-blue-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Season 1</div>
               <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald'] leading-[0.9]">
-                Amplifying <br/> The <span className="text-transparent text-stroke hover:text-white transition-colors duration-500 relative">Builders</span>
+                Builders of the <br/> <span className="text-transparent text-stroke hover:text-white transition-colors duration-500 relative">MEA Future</span>
               </h2>
-              <p className="text-xl text-gray-300 font-light leading-relaxed">
-                Supply chains are the unseen engines of the world. But the leaders who run them often operate in the shadows. 
-              </p>
-              <div className="space-y-8 md:space-y-10">
-                 {[
-                   { title: "Operator First", desc: "No consultants. Just real practitioners." },
-                   { title: "MEA Centric", desc: "Nuanced conversations about our region." },
-                   { title: "Future Focused", desc: "AI, automation, and the next decade." }
-                 ].map((item, i) => (
-                   <div key={i} className="flex items-start gap-4 md:gap-6 group">
-                      <div className="mt-1 md:mt-2 w-2 h-2 md:w-3 md:h-3 bg-blue-600 rounded-full shrink-0"></div>
-                      <div>
-                        <h4 className="text-lg md:text-3xl font-bold uppercase font-['Oswald'] text-white mb-2">{item.title}</h4>
-                        <p className="text-sm md:text-xl text-gray-500 group-hover:text-gray-400 transition-colors font-light">{item.desc}</p>
-                      </div>
+              
+              <div className="space-y-8">
+                <p className="text-2xl text-white font-['Syne'] font-bold leading-tight">
+                  A storytelling podcast decoding how real operators build, break, and rebuild — from zero to N.
+                </p>
+
+                <div className="p-6 bg-white/5 border border-white/10 rounded-sm">
+                   <p className="text-gray-300 font-light leading-relaxed">
+                      Hosted by <strong className="text-white">Rachid Labrik</strong>, operator CEO scaling businesses across the Middle East & Africa.
+                   </p>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                   <div className="flex items-center gap-3 text-sm text-gray-400 font-mono uppercase tracking-wider">
+                      <Mic size={16} className="text-blue-500" />
+                      <span>New episodes every other week</span>
                    </div>
-                 ))}
+                   <div className="flex items-center gap-3 text-sm text-gray-400 font-mono uppercase tracking-wider">
+                      <Headphones size={16} className="text-blue-500" />
+                      <span>Listen on Spotify · Apple Podcasts · YouTube</span>
+                   </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                   <a 
+                     href="#"
+                     className="px-8 py-4 bg-blue-600 text-white font-bold uppercase tracking-widest text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
+                   >
+                      <Play size={12} fill="currentColor" /> Listen to Latest Episode
+                   </a>
+                   <a 
+                     href="/about"
+                     onClick={(e) => handleNavigate(e, '/about')}
+                     className="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2"
+                   >
+                      Explore the Journey <ArrowRight size={14} />
+                   </a>
+                </div>
               </div>
            </div>
         </div>
@@ -226,20 +247,21 @@ const Podcast: React.FC = () => {
         </div>
 
 
-        {/* --- EPISODE ANATOMY --- */}
+        {/* --- EPISODE ANATOMY (The 0toN Story Arc) --- */}
         <div className="mb-48 relative">
            <div className="mb-20">
               <span className="text-blue-600 font-bold tracking-[0.2em] uppercase text-xs mb-4 block">The Blueprint</span>
-              <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald']">Episode Anatomy</h2>
+              <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald']">The 0toN Story Arc</h2>
+              <p className="text-xl text-gray-400 font-light mt-6 max-w-2xl leading-relaxed">Every episode follows the same human structure:</p>
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-5">
+           <div className="grid grid-cols-1 md:grid-cols-5 mb-16">
               {[
-                { step: "01", label: "Origin", desc: "The personal backstory." },
-                { step: "02", label: "Conflict", desc: "The moment of crisis." },
-                { step: "03", label: "Action", desc: "The strategic pivot." },
-                { step: "04", label: "Result", desc: "The transformation." },
-                { step: "05", label: "Future", desc: "The vision ahead." },
+                { step: "01", label: "The Origin", desc: "What shaped their discipline and worldview." },
+                { step: "02", label: "The Turning Point", desc: "The moment that changed everything." },
+                { step: "03", label: "The Transformation", desc: "How they rebuilt, adapted, or innovated under pressure." },
+                { step: "04", label: "The Horizon", desc: "What they see coming next: AI, markets, leadership shifts." },
+                { step: "05", label: "The Code", desc: "The lesson they paid for — and would never trade." },
               ].map((item, i) => (
                 <div key={i} className="group relative border-t border-b border-r border-white/10 first:border-l p-10 h-[400px] flex flex-col justify-between hover:bg-[#0a0a0a] transition-all duration-500">
                    <div className="flex flex-col gap-2">
@@ -254,6 +276,12 @@ const Podcast: React.FC = () => {
                    </div>
                 </div>
               ))}
+           </div>
+           
+           <div className="text-center border-t border-white/10 pt-16">
+              <p className="text-2xl md:text-4xl font-['Syne'] font-bold text-white uppercase leading-tight tracking-tight">
+                "This is not an interview.<br/> It’s a documented transformation."
+              </p>
            </div>
         </div>
 

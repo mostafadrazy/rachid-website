@@ -1,7 +1,13 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, Trash2, Plus, LogOut, ExternalLink, Database, Lock, ChevronRight, ShieldAlert, Activity, AlertCircle, X, ShieldQuestion } from 'lucide-react';
+import { 
+  Save, Trash2, Plus, ExternalLink, Database, Lock, 
+  Activity, ShieldQuestion, Bold, Italic, Underline, List, ListOrdered, 
+  Heading1, Heading2, Heading3, Image as ImageIcon, 
+  Code, Eye, AlignLeft, AlignCenter, AlignRight, Link as LinkIcon,
+  Highlighter
+} from 'lucide-react';
 import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 const Admin: React.FC = () => {
@@ -13,6 +19,8 @@ const Admin: React.FC = () => {
   const [loginError, setLoginError] = useState(false);
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [editMode, setEditMode] = useState<'visual' | 'html'>('visual');
+  const visualEditorRef = useRef<HTMLDivElement>(null);
   
   const [currentPost, setCurrentPost] = useState({
     id: '',
@@ -64,12 +72,17 @@ const Admin: React.FC = () => {
     e.preventDefault();
     if (!supabase) return;
     
+    let finalContent = currentPost.content;
+    if (editMode === 'visual' && visualEditorRef.current) {
+      finalContent = visualEditorRef.current.innerHTML;
+    }
+
     const slug = currentPost.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
     
     const postData = { 
       title: currentPost.title,
       slug: slug,
-      content: currentPost.content,
+      content: finalContent,
       excerpt: currentPost.excerpt,
       image_url: currentPost.image_url,
       category: currentPost.category,
@@ -95,39 +108,128 @@ const Admin: React.FC = () => {
 
   const resetForm = () => {
     setCurrentPost({ id: '', title: '', slug: '', content: '', excerpt: '', image_url: '', category: '', read_time: '' });
+    setEditMode('visual');
   };
 
   const executeDelete = async (id: string | null) => {
-    if (!id || !supabase) {
-      console.error("Delete Aborted: Missing ID or Supabase client", { id, supabaseExists: !!supabase });
-      return;
-    }
-
+    if (!id || !supabase) return;
     setIsDeletingId(id);
-    console.info(`Protocol Initiated: Purging record ${id}...`);
-
     try {
-      const { error, status } = await supabase
-        .from('blogs')
-        .delete()
-        .eq('id', id);
-
-      if (error) {
-        console.error("Supabase Deletion Error:", error);
-        throw error;
-      }
-
-      console.info(`Protocol Success: Status ${status}. Record removed from database.`);
-      
-      // Update local state immediately for snappy UI
+      const { error } = await supabase.from('blogs').delete().eq('id', id);
+      if (error) throw error;
       setPosts(prev => prev.filter(post => post.id !== id));
       setShowDeleteConfirm(null);
     } catch (err: any) {
-      console.error("Execution failed:", err);
-      alert(`PURGE FAILED: ${err.message || "Unknown Database Error"}. Ensure you have set the DELETE policy in Supabase.`);
+      alert(`PURGE FAILED: ${err.message || "Unknown Error"}`);
     } finally {
       setIsDeletingId(null);
     }
+  };
+
+  // --- EDITOR LOGIC ---
+
+  // Helper to execute commands without losing focus
+  const execCmd = (command: string, value: any = null) => {
+    // Ensure focus is in the editor
+    if (visualEditorRef.current) {
+        visualEditorRef.current.focus();
+    }
+    document.execCommand(command, false, value);
+    updateContentFromVisual();
+  };
+
+  // We use onMouseDown with preventDefault for toolbar buttons to avoid blurring the editor
+  const handleToolbarAction = (e: React.MouseEvent, command: string, value: any = null) => {
+    e.preventDefault();
+    execCmd(command, value);
+  };
+
+  const insertImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    // Save current selection before prompt blurs focus
+    const selection = window.getSelection();
+    const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+    
+    const url = prompt("Enter Direct Image URL:");
+    
+    // Restore focus to editor
+    if (visualEditorRef.current) {
+        visualEditorRef.current.focus();
+    }
+    
+    // Restore selection range
+    if (range) {
+        const sel = window.getSelection();
+        if (sel) {
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
+
+    if (url) {
+      // We insert HTML directly to ensure style control
+      const imgHtml = `<img src="${url}" style="max-width:100%; height:auto; display:block; margin: 2rem auto; border-radius: 4px; border:1px solid rgba(255,255,255,0.1);" />`;
+      document.execCommand('insertHTML', false, imgHtml);
+      updateContentFromVisual();
+    }
+  };
+
+  const insertLink = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    // Save current selection
+    const selection = window.getSelection();
+    const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+
+    const url = prompt("Enter Link URL:", "https://");
+    
+    // Restore focus
+    if (visualEditorRef.current) {
+        visualEditorRef.current.focus();
+    }
+    
+    // Restore selection
+    if (range) {
+        const sel = window.getSelection();
+        if (sel) {
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
+
+    if (url) {
+      document.execCommand('createLink', false, url);
+      updateContentFromVisual();
+    }
+  };
+
+  const updateContentFromVisual = () => {
+    if (visualEditorRef.current) {
+      setCurrentPost(prev => ({ ...prev, content: visualEditorRef.current!.innerHTML }));
+    }
+  };
+
+  // Paste handler to preserve Word formatting as much as possible
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData('text/plain');
+    const html = e.clipboardData.getData('text/html');
+
+    if (html) {
+      // Basic sanitization if needed, but here we prioritize preserving format
+      document.execCommand('insertHTML', false, html);
+    } else {
+      document.execCommand('insertText', false, text);
+    }
+    updateContentFromVisual();
+  };
+
+  const handleModeSwitch = (mode: 'visual' | 'html') => {
+    if (mode === 'html' && visualEditorRef.current) {
+      setCurrentPost(prev => ({ ...prev, content: visualEditorRef.current!.innerHTML }));
+    }
+    setEditMode(mode);
   };
 
   if (unconfigured) {
@@ -137,7 +239,7 @@ const Admin: React.FC = () => {
           <Database size={40} className="text-blue-500 mb-6" />
           <h2 className="text-2xl font-bold font-['Oswald'] uppercase mb-4 tracking-tight">Terminal Disconnected</h2>
           <p className="text-gray-400 mb-8 text-sm leading-relaxed">
-            The blog archive requires a valid database link. Ensure you have run the SQL setup and updated your credentials in <code className="text-blue-400">supabaseClient.ts</code>.
+            The blog archive requires a valid database link. Ensure you have run the SQL setup and updated your credentials.
           </p>
           <button onClick={() => window.location.reload()} className="w-full py-4 bg-blue-600 text-white font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-blue-700 transition-all">
             Restart Connection
@@ -201,19 +303,120 @@ const Admin: React.FC = () => {
 
         <AnimatePresence mode="wait">
           {isEditing ? (
-            <motion.form key="editor" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} onSubmit={handleSave} className="glass p-12 border border-white/10 max-w-5xl mx-auto shadow-2xl relative">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
-                <input type="text" value={currentPost.title} onChange={e => setCurrentPost({...currentPost, title: e.target.value})} className="w-full bg-black/50 border border-white/10 p-5 text-white focus:border-blue-500 outline-none" placeholder="Title" required />
-                <input type="text" value={currentPost.image_url} onChange={e => setCurrentPost({...currentPost, image_url: e.target.value})} className="w-full bg-black/50 border border-white/10 p-5 text-white focus:border-blue-500 outline-none" placeholder="Image URL" required />
-                <input type="text" value={currentPost.category} onChange={e => setCurrentPost({...currentPost, category: e.target.value})} className="w-full bg-black/50 border border-white/10 p-5 text-white focus:border-blue-500 outline-none" placeholder="Category" />
-                <input type="text" value={currentPost.read_time} onChange={e => setCurrentPost({...currentPost, read_time: e.target.value})} className="w-full bg-black/50 border border-white/10 p-5 text-white focus:border-blue-500 outline-none" placeholder="Read Time" />
+            <motion.form key="editor" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} onSubmit={handleSave} className="glass p-8 md:p-12 border border-white/10 max-w-6xl mx-auto shadow-2xl relative">
+              
+              <div className="flex flex-col lg:flex-row gap-8 md:gap-10 mb-8 md:mb-10">
+                <div className="flex-grow space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <input type="text" value={currentPost.title} onChange={e => setCurrentPost({...currentPost, title: e.target.value})} className="w-full bg-black/50 border border-white/10 p-4 md:p-5 text-white focus:border-blue-500 outline-none" placeholder="Transmission Title" required />
+                    <input type="text" value={currentPost.image_url} onChange={e => setCurrentPost({...currentPost, image_url: e.target.value})} className="w-full bg-black/50 border border-white/10 p-4 md:p-5 text-white focus:border-blue-500 outline-none" placeholder="Header Hero Image URL" required />
+                    <input type="text" value={currentPost.category} onChange={e => setCurrentPost({...currentPost, category: e.target.value})} className="w-full bg-black/50 border border-white/10 p-4 md:p-5 text-white focus:border-blue-500 outline-none" placeholder="Sector / Category" />
+                    <input type="text" value={currentPost.read_time} onChange={e => setCurrentPost({...currentPost, read_time: e.target.value})} className="w-full bg-black/50 border border-white/10 p-4 md:p-5 text-white focus:border-blue-500 outline-none" placeholder="Sync Duration (e.g. 5 min read)" />
+                  </div>
+                  <textarea value={currentPost.excerpt} onChange={e => setCurrentPost({...currentPost, excerpt: e.target.value})} className="w-full bg-black/50 border border-white/10 p-4 md:p-5 text-white focus:border-blue-500 outline-none h-20 md:h-24" placeholder="Brief Summary (Excerpt)" />
+                </div>
+                
+                <div className="lg:w-1/3">
+                  <div className="h-full min-h-[150px] md:min-h-[200px] border border-white/10 bg-black/30 rounded-lg overflow-hidden flex flex-col">
+                    <div className="p-3 border-b border-white/10 bg-white/5 text-[9px] font-bold uppercase tracking-widest flex items-center gap-2">
+                       <ImageIcon size={12} className="text-blue-500" /> Hero Preview
+                    </div>
+                    <div className="flex-grow flex items-center justify-center bg-checkered p-4 overflow-hidden">
+                      {currentPost.image_url ? (
+                        <img src={currentPost.image_url} className="max-w-full max-h-[250px] object-contain shadow-2xl" alt="Preview" />
+                      ) : (
+                        <div className="text-gray-700 text-[10px] uppercase font-bold tracking-widest">No Hero Linked</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <textarea value={currentPost.excerpt} onChange={e => setCurrentPost({...currentPost, excerpt: e.target.value})} className="w-full bg-black/50 border border-white/10 p-5 text-white focus:border-blue-500 outline-none h-24 mb-6" placeholder="Excerpt" />
-              <textarea value={currentPost.content} onChange={e => setCurrentPost({...currentPost, content: e.target.value})} className="w-full bg-black/50 border border-white/10 p-5 text-white focus:border-blue-500 outline-none h-80 mb-10 font-mono text-sm" placeholder="Content (Markdown supported)" required />
-              <div className="flex justify-end gap-4">
-                 <button type="button" onClick={() => setIsEditing(false)} className="px-10 py-5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-red-900/10 transition-all">Abort</button>
-                 <button type="submit" className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2">
-                    <Save size={14}/> Save Transmission
+
+              {/* Advanced Editor Controls */}
+              <div className="mb-0 flex flex-wrap items-center justify-between gap-4 p-3 md:p-4 border border-white/10 bg-white/5 rounded-t-lg sticky top-24 md:top-32 z-30 backdrop-blur-md">
+                <div className="flex items-center gap-2">
+                   <button 
+                    type="button" 
+                    onClick={() => handleModeSwitch('visual')}
+                    className={`px-3 md:px-4 py-2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-all ${editMode === 'visual' ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'hover:bg-white/5'}`}
+                   >
+                     <Eye size={14} /> Visual
+                   </button>
+                   <button 
+                    type="button" 
+                    onClick={() => handleModeSwitch('html')}
+                    className={`px-3 md:px-4 py-2 text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-all ${editMode === 'html' ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'hover:bg-white/5'}`}
+                   >
+                     <Code size={14} /> Source
+                   </button>
+                </div>
+
+                {editMode === 'visual' && (
+                  <div className="flex flex-wrap items-center gap-1">
+                    <div className="flex gap-1 items-center px-1 md:px-2 border-r border-white/10">
+                      <button type="button" title="Heading 1" onMouseDown={(e) => handleToolbarAction(e, 'formatBlock', 'H1')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><Heading1 size={16} /></button>
+                      <button type="button" title="Heading 2" onMouseDown={(e) => handleToolbarAction(e, 'formatBlock', 'H2')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><Heading2 size={16} /></button>
+                      <button type="button" title="Heading 3" onMouseDown={(e) => handleToolbarAction(e, 'formatBlock', 'H3')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><Heading3 size={16} /></button>
+                      <select onChange={(e) => execCmd('fontSize', e.target.value)} className="bg-black/50 border border-white/10 text-[9px] px-1 py-0.5 outline-none text-white ml-1">
+                        <option value="3">Size</option>
+                        <option value="1">Small</option>
+                        <option value="3">Normal</option>
+                        <option value="5">Large</option>
+                        <option value="7">XL</option>
+                      </select>
+                    </div>
+
+                    <div className="flex gap-1 items-center px-1 md:px-2 border-r border-white/10">
+                      <button type="button" title="Bold" onMouseDown={(e) => handleToolbarAction(e, 'bold')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><Bold size={16} /></button>
+                      <button type="button" title="Italic" onMouseDown={(e) => handleToolbarAction(e, 'italic')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><Italic size={16} /></button>
+                      <button type="button" title="Underline" onMouseDown={(e) => handleToolbarAction(e, 'underline')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><Underline size={16} /></button>
+                      <button type="button" title="Highlight" onMouseDown={(e) => handleToolbarAction(e, 'backColor', '#2563eb')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors text-blue-500"><Highlighter size={16} /></button>
+                    </div>
+
+                    <div className="flex gap-1 items-center px-1 md:px-2 border-r border-white/10">
+                      <button type="button" title="Align Left" onMouseDown={(e) => handleToolbarAction(e, 'justifyLeft')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><AlignLeft size={16} /></button>
+                      <button type="button" title="Align Center" onMouseDown={(e) => handleToolbarAction(e, 'justifyCenter')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><AlignCenter size={16} /></button>
+                      <button type="button" title="Align Right" onMouseDown={(e) => handleToolbarAction(e, 'justifyRight')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><AlignRight size={16} /></button>
+                    </div>
+
+                    <div className="flex gap-1 items-center px-1 md:px-2">
+                      <button type="button" title="Bullet List" onMouseDown={(e) => handleToolbarAction(e, 'insertUnorderedList')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><List size={16} /></button>
+                      <button type="button" title="Numbered List" onMouseDown={(e) => handleToolbarAction(e, 'insertOrderedList')} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors"><ListOrdered size={16} /></button>
+                      <button type="button" title="Insert Link" onMouseDown={insertLink} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors text-blue-400"><LinkIcon size={16} /></button>
+                      <button type="button" title="Insert Image" onMouseDown={insertImage} className="p-1.5 md:p-2 hover:bg-white/10 transition-colors text-green-400"><ImageIcon size={16} /></button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Content Editor Area */}
+              <div className="relative mb-10 min-h-[600px] border border-white/10 bg-black/20 overflow-hidden">
+                {editMode === 'visual' ? (
+                  <div 
+                    ref={visualEditorRef}
+                    contentEditable
+                    dangerouslySetInnerHTML={{ __html: currentPost.content }}
+                    onBlur={updateContentFromVisual}
+                    onInput={updateContentFromVisual}
+                    onPaste={handlePaste}
+                    className="visual-editor-root p-6 md:p-12 outline-none prose prose-invert max-w-none min-h-[600px] font-light leading-relaxed text-gray-200 overflow-y-auto"
+                    data-placeholder="Commence data entry... (Direct Paste from Word/Docs supported)"
+                  />
+                ) : (
+                  <textarea 
+                    value={currentPost.content} 
+                    onChange={e => setCurrentPost({...currentPost, content: e.target.value})} 
+                    className="w-full bg-black/50 p-6 md:p-12 text-blue-400 focus:border-blue-500 outline-none h-[600px] font-mono text-sm leading-relaxed border-none" 
+                    placeholder="Enter raw HTML protocol..." 
+                    required 
+                  />
+                )}
+              </div>
+
+              <div className="flex flex-col md:flex-row justify-end gap-4">
+                 <button type="button" onClick={() => setIsEditing(false)} className="px-10 py-4 md:py-5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-red-900/10 transition-all">Abort Transmission</button>
+                 <button type="submit" className="bg-white text-black px-12 py-4 md:py-5 text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2">
+                    <Save size={14}/> Save Archive
                  </button>
               </div>
             </motion.form>
@@ -250,52 +453,36 @@ const Admin: React.FC = () => {
           )}
         </AnimatePresence>
       </div>
-
-      {/* CUSTOM SPATIAL DELETE MODAL */}
-      <AnimatePresence>
-        {showDeleteConfirm && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }} 
-              onClick={() => setShowDeleteConfirm(null)}
-              className="absolute inset-0 bg-[#050505]/80 backdrop-blur-xl"
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }} 
-              animate={{ opacity: 1, scale: 1, y: 0 }} 
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-md glass border border-red-500/20 p-10 text-center overflow-hidden"
-            >
-              <div className="absolute top-0 left-0 w-full h-1 bg-red-600/50"></div>
-              <div className="w-16 h-16 bg-red-600/10 border border-red-600/20 rounded-full flex items-center justify-center mx-auto mb-8 text-red-500">
-                <ShieldQuestion size={32} />
-              </div>
-              <h3 className="text-2xl font-bold font-['Oswald'] uppercase mb-4 text-white">Critical Alert</h3>
-              <p className="text-gray-400 mb-10 leading-relaxed text-sm">
-                Are you sure you want to permanently <span className="text-white font-bold">TERMINATE</span> this transmission? This action is irreversible.
-              </p>
-              <div className="flex flex-col gap-3">
-                 <button 
-                  onClick={() => executeDelete(showDeleteConfirm)} 
-                  disabled={isDeletingId !== null}
-                  className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-2"
-                 >
-                   {isDeletingId ? <Activity size={14} className="animate-spin" /> : <Trash2 size={14} />}
-                   {isDeletingId ? "Executing..." : "Confirm Purge"}
-                 </button>
-                 <button 
-                  onClick={() => setShowDeleteConfirm(null)}
-                  className="w-full py-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold uppercase tracking-widest text-xs transition-all"
-                 >
-                   Abort Protocol
-                 </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      
+      {/* Advanced Visual Editor Styles - Supporting Word Styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .visual-editor-root { min-height: 600px; color: #e5e7eb; }
+        .visual-editor-root:empty:before { content: attr(data-placeholder); color: #444; pointer-events: none; }
+        .visual-editor-root h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 2rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; border-left: 8px solid #2563eb; padding-left: 1.5rem; color: #fff; line-height: 1; }
+        .visual-editor-root h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 0.75rem; color: #fff; }
+        .visual-editor-root h3 { font-size: 1.8rem; font-weight: 600; margin-bottom: 1.25rem; text-transform: uppercase; font-family: 'Oswald', sans-serif; color: #2563eb; }
+        .visual-editor-root p { margin-bottom: 1.5rem; line-height: 1.9; font-size: 1.15rem; }
+        .visual-editor-root ul { list-style-type: disc; margin-left: 2.5rem; margin-bottom: 1.75rem; }
+        .visual-editor-root ol { list-style-type: decimal; margin-left: 2.5rem; margin-bottom: 1.75rem; }
+        .visual-editor-root blockquote { border-left: 4px solid #2563eb; padding-left: 1.5rem; font-style: italic; color: #9ca3af; margin: 2rem 0; background: rgba(37,99,235,0.05); padding: 2rem; font-family: 'Syne', sans-serif; }
+        .visual-editor-root img { max-width: 100%; height: auto; border: 1px solid rgba(255,255,255,0.1); margin: 2.5rem auto; display: block; box-shadow: 0 30px 60px rgba(0,0,0,0.5); border-radius: 6px; }
+        .visual-editor-root a { color: #2563eb; text-decoration: underline; font-weight: 600; cursor: pointer; }
+        .visual-editor-root * { font-family: 'Inter', sans-serif; }
+        
+        /* Handling Word's Inline Styles and Pasted Content */
+        .visual-editor-root span[style*="font-size"], 
+        .visual-editor-root font[style*="font-size"] { font-size: inherit; }
+        .visual-editor-root [style*="mso-"] { display: initial; } /* Don't hide mso stuff if it affects layout */
+        
+        /* Font size mapping for document.execCommand */
+        .visual-editor-root font[size="1"] { font-size: 0.8rem; }
+        .visual-editor-root font[size="2"] { font-size: 0.95rem; }
+        .visual-editor-root font[size="3"] { font-size: 1.15rem; }
+        .visual-editor-root font[size="4"] { font-size: 1.35rem; }
+        .visual-editor-root font[size="5"] { font-size: 1.75rem; }
+        .visual-editor-root font[size="6"] { font-size: 2.25rem; }
+        .visual-editor-root font[size="7"] { font-size: 3.5rem; }
+      `}} />
     </div>
   );
 };
