@@ -1,7 +1,8 @@
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Mic, Users, Calendar, ArrowRight, Radio, MonitorPlay, Zap, Sparkles } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Mic, Users, Calendar, ArrowRight, Radio, MonitorPlay, Sparkles } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 const ShapeDivider: React.FC = () => (
   <div className="flex items-center justify-center py-24 opacity-30">
@@ -15,13 +16,15 @@ const KeynoteCard: React.FC<{
   number: string; 
   title: string; 
   description: string; 
-  tags?: string[] 
-}> = ({ number, title, description, tags }) => (
+  tags?: string[];
+  onClick?: (e: React.MouseEvent) => void;
+}> = ({ number, title, description, tags, onClick }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-50px" }}
-    className="group relative grid grid-cols-1 lg:grid-cols-12 gap-8 py-12 border-b border-white/10 hover:bg-white/5 transition-colors duration-500 px-4 lg:px-8"
+    onClick={onClick}
+    className="group relative grid grid-cols-1 lg:grid-cols-12 gap-8 py-12 border-b border-white/10 hover:bg-white/5 transition-colors duration-500 px-4 lg:px-8 cursor-pointer"
   >
     <div className="lg:col-span-2">
        <span className="text-5xl md:text-6xl font-['Oswald'] font-bold text-transparent text-stroke group-hover:text-blue-600 group-hover:text-stroke-0 transition-all duration-500 opacity-50">
@@ -67,6 +70,8 @@ const FormatCard: React.FC<{ icon: React.ReactNode; label: string }> = ({ icon, 
 
 const Speaking: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [dynamicThemes, setDynamicThemes] = useState<any[]>([]);
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
@@ -77,44 +82,80 @@ const Speaking: React.FC = () => {
   const opacityHero = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
   const scaleHero = useTransform(scrollYProgress, [0, 0.4], [1, 0.95]);
 
+  useEffect(() => {
+    async function fetchLatestBlogs() {
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('blogs')
+            .select('id, title, excerpt, category')
+            .order('created_at', { ascending: false })
+            .limit(4);
+          
+          if (data && data.length > 0) {
+            setDynamicThemes(data);
+          }
+        } catch (e) {
+          console.error("Failed to sync latest insights for themes section", e);
+        }
+      }
+    }
+    fetchLatestBlogs();
+  }, []);
+
   const handleNavigate = (e: React.MouseEvent, path: string) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     window.history.pushState({}, '', path);
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
+  const defaultThemes = [
+    {
+      title: "The Power of Getting Uncomfortable",
+      description: "How seeking friction and discomfort shapes professional philosophy. Lessons from high-altitude climbs to high-stakes sales cycles.",
+      category: "Leadership"
+    },
+    {
+      title: "The AI Renaissance in Supply Chain",
+      description: "Moving beyond the buzzwords to the operational reality of machine learning in logistics and global trade.",
+      category: "Technology"
+    },
+    {
+      title: "How to Lead in MEA",
+      description: "Navigating cultural intelligence, diversity, and ambition in one of the world's most complex operational regions.",
+      category: "Management"
+    },
+    {
+      title: "Scaling SaaS in Emerging Markets",
+      description: "A documented transformation of GTM, partnerships, and people when building in MEA's hyper-growth markets.",
+      category: "Growth"
+    }
+  ];
+
+  const displayThemes = dynamicThemes.length > 0 ? dynamicThemes : defaultThemes;
+
   return (
     <section id="speaking" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-20 pb-24 overflow-hidden">
       
-      {/* --- CINEMATIC HERO WITH BACKGROUND IMAGE --- */}
+      {/* --- CINEMATIC HERO --- */}
       <div className="relative h-screen flex items-center justify-center overflow-hidden">
-        
-        {/* Background Image Layer */}
-        <motion.div 
-          style={{ y: yImage, opacity: opacityHero }}
-          className="absolute inset-0 z-0"
-        >
+        <motion.div style={{ y: yImage, opacity: opacityHero }} className="absolute inset-0 z-0">
           <img 
             src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1763748388/WhatsApp_Image_2025-11-21_at_18.28.58_4a51f166_jwqpmm.jpg" 
             alt="Speaking Background" 
             className="w-full h-full object-cover grayscale opacity-30"
           />
-          {/* Overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-[#050505]/90"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505]"></div>
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
         </motion.div>
 
-        {/* Spatial Grid Elements */}
         <div className="absolute inset-0 pointer-events-none z-10">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:60px_60px] opacity-20"></div>
           <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-900/10 rounded-full blur-[120px] animate-pulse"></div>
         </div>
 
-        <motion.div 
-          style={{ opacity: opacityHero, scale: scaleHero }}
-          className="container mx-auto px-6 relative z-20"
-        >
+        <motion.div style={{ opacity: opacityHero, scale: scaleHero }} className="container mx-auto px-6 relative z-20">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -126,7 +167,7 @@ const Speaking: React.FC = () => {
                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-400">Global Keynote Speaker</span>
             </div>
 
-            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold uppercase font-['Oswald'] leading-[0.9] tracking-tighter text-white drop-shadow-2xl max-w-6xl mx-auto">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold uppercase font-['Oswald'] font-bold leading-[0.85] tracking-tighter text-white drop-shadow-2xl max-w-6xl mx-auto">
               <span className="block mb-2">Lessons From</span>
               <span className="text-transparent text-stroke-blue hover:text-white transition-all duration-700 block mb-2">Discomfort,</span>
               <span className="block mb-2">Decision-Making &</span>
@@ -136,7 +177,7 @@ const Speaking: React.FC = () => {
                   initial={{ width: 0 }}
                   whileInView={{ width: '100%' }}
                   transition={{ delay: 0.5, duration: 1 }}
-                  className="absolute -bottom-2 left-0 h-1 bg-blue-600/30 blur-sm rounded-full"
+                  className="absolute -bottom-4 left-0 h-1 md:h-2 bg-blue-600/30 blur-sm rounded-full"
                 />
               </span>
             </h1>
@@ -161,7 +202,6 @@ const Speaking: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* Dynamic scroll indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 text-white/10">
            <div className="w-[1px] h-20 bg-gradient-to-b from-blue-600 to-transparent"></div>
            <span className="text-[7px] uppercase tracking-[0.6em] font-bold rotate-90 origin-left mt-10">Archive</span>
@@ -169,7 +209,6 @@ const Speaking: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
-        {/* Why I Speak - Zig Zag */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 items-center mb-48 pt-32">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -225,47 +264,37 @@ const Speaking: React.FC = () => {
 
         <ShapeDivider />
 
-        {/* Signature Keynotes */}
+        {/* Dynamic Signature Themes populated from Blog Archive */}
         <div className="mb-48">
            <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/10 pb-12">
              <div>
-               <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs block mb-4">Keynotes</span>
+               <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs block mb-4">Latest Insights</span>
                <h2 className="text-5xl md:text-8xl font-bold uppercase font-['Oswald'] leading-none text-white">Signature <br/> Themes</h2>
              </div>
-             <p className="text-gray-500 max-w-sm text-sm font-light leading-relaxed">Strategic narratives tailored for high-stakes leadership environments.</p>
+             <p className="text-gray-500 max-w-sm text-sm font-light leading-relaxed">
+               Strategic narratives and operational blueprints from the most recent archive entries.
+             </p>
            </div>
 
            <div className="flex flex-col">
-              <KeynoteCard 
-                number="01"
-                title="The Power of Getting Uncomfortable"
-                description="This is the story of how pushing myself physically, professionally, and emotionally shaped my philosophy. From the Himalayas to high-stakes sales cycles, discomfort became my greatest mentor. I teach teams how to seek friction to find growth."
-                tags={['Leadership', 'Resilience', 'Mindset']}
-              />
-              <KeynoteCard 
-                number="02"
-                title="The AI Renaissance in Supply Chain"
-                description="How AI will redefine the next decade of planning, WMS, and execution. Real examples. Real frameworks. Real transformation. Moving beyond the buzzwords to the operational reality of machine learning in logistics."
-                tags={['Technology', 'Innovation', 'Future of Work']}
-              />
-              <KeynoteCard 
-                number="03"
-                title="How to Lead in MEA"
-                description="A talk rooted in cultural intelligence. Navigating diversity, expectations, pressure, and ambition in one of the world’s most complex regions. Understanding the nuance between a 'Yes' that means 'Maybe' and a 'No' that means 'Negotiate'."
-                tags={['Culture', 'Management', 'Regional Strategy']}
-              />
-              <KeynoteCard 
-                number="04"
-                title="Scaling SaaS in Emerging Markets"
-                description="What nobody tells you about GTM, partnerships, pricing, politics, and people when building in MEA. A playbook for startups and established tech firms looking to conquer the region."
-                tags={['Growth', 'SaaS', 'Go-To-Market']}
-              />
+              {displayThemes.map((theme, idx) => (
+                <KeynoteCard 
+                  key={theme.id || idx}
+                  number={`0${idx + 1}`}
+                  title={theme.title}
+                  description={theme.excerpt || theme.description}
+                  tags={theme.category ? [theme.category] : [theme.category || "Strategic"]}
+                  onClick={(e) => {
+                    const path = theme.id ? `/blog?id=${theme.id}` : '/blog';
+                    handleNavigate(e, path);
+                  }}
+                />
+              ))}
            </div>
         </div>
 
         <ShapeDivider />
 
-        {/* Speaking Formats */}
         <div className="mb-32">
            <div className="text-center mb-24">
               <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs block mb-4">Availability</span>

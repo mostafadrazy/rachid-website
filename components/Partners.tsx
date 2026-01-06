@@ -6,24 +6,24 @@ import { ArrowUpRight, ShieldCheck, Globe, Zap, Handshake } from 'lucide-react';
 const partners = [
   {
     id: 1,
-    title: "Strategic Signing",
-    category: "Global Alliance",
+    title: "Bindawood",
+    category: "Strategic Signing",
     image: "https://res.cloudinary.com/dmnqlruhl/image/upload/v1766255837/41326EAE-13A4-47A7-B32D-DB083FBCC632_xiepcf.jpg",
     icon: <Handshake size={20} />,
     position: "object-center"
   },
   {
     id: 2,
-    title: "Expansion Agreement",
-    category: "Joint Venture",
+    title: "The Petshop",
+    category: "Project Go Live",
     image: "https://res.cloudinary.com/dmnqlruhl/image/upload/v1766255831/9953B469-4CCB-435C-8459-60B862E731E0_i6vlgo.jpg",
     icon: <Globe size={20} />,
-    position: "object-[15%_center]" // Shifted slightly from far left to better frame the handshake
+    position: "object-left"
   },
   {
     id: 3,
-    title: "Leadership Summit",
-    category: "Strategic",
+    title: "Tamer Group",
+    category: "Strategic Partnership",
     image: "https://res.cloudinary.com/dmnqlruhl/image/upload/v1766255826/1256683E-55B3-4583-9CCA-C8F4750C8A52_1_o65ou2.jpg",
     icon: <ShieldCheck size={20} />,
     position: "object-center"
@@ -122,7 +122,7 @@ const Partners: React.FC = () => {
       <div className="relative w-full overflow-hidden flex py-10">
         {/* Left/Right Fades for immersion */}
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-20 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-20 pointer-events-none"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-l from-[#050505] to-transparent z-20 pointer-events-none"></div>
 
         <motion.div 
           className="flex gap-6 md:gap-8"

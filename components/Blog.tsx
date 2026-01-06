@@ -28,10 +28,26 @@ const Blog: React.FC = () => {
       setLoading(false);
       return;
     }
-    fetchPosts();
+    
+    const initializeBlog = async () => {
+      const fetchedPosts = await fetchPosts();
+      
+      // Check for 'id' parameter in URL to deep-link to a specific post
+      const params = new URLSearchParams(window.location.search);
+      const postId = params.get('id');
+      
+      if (postId && fetchedPosts) {
+        const post = fetchedPosts.find(p => p.id === postId);
+        if (post) {
+          setSelectedPost(post);
+        }
+      }
+    };
+    
+    initializeBlog();
   }, []);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (): Promise<BlogPost[] | null> => {
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -42,14 +58,25 @@ const Blog: React.FC = () => {
       if (error) {
         console.error("Supabase Error:", error);
         setConfigError(true);
+        return null;
       } else if (data) {
         setPosts(data);
+        setLoading(false);
+        return data as BlogPost[];
       }
     } catch (err) {
       console.error("Fetch Error:", err);
       setConfigError(true);
     }
     setLoading(false);
+    return null;
+  };
+
+  const handleBackToArchive = () => {
+    setSelectedPost(null);
+    // Clear the query parameter from the URL when going back
+    const newUrl = window.location.pathname;
+    window.history.pushState({}, '', newUrl);
   };
 
   if (configError) {
@@ -83,7 +110,7 @@ const Blog: React.FC = () => {
       >
         <div className="container mx-auto px-6 md:px-12 max-w-4xl">
           <button 
-            onClick={() => setSelectedPost(null)}
+            onClick={handleBackToArchive}
             className="flex items-center gap-2 text-blue-500 hover:text-white transition-colors mb-12 group"
           >
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
