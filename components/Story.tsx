@@ -86,7 +86,7 @@ const Story: React.FC = () => {
                   {chapter.title}
                 </h3>
                 
-                <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium group-hover:text-white transition-colors duration-500 whitespace-pre-line">
+                <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium group-hover:text-white transition-colors duration-500 whitespace-pre-line text-justify-custom">
                   {chapter.content}
                 </p>
               </motion.div>

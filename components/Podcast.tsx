@@ -24,6 +24,12 @@ const YouTubeIcon = () => (
   </svg>
 );
 
+const GooglePodcastsIcon = () => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+        <path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81z"/>
+    </svg>
+);
+
 const AudioWaveParams: React.FC = () => (
     <div className="absolute inset-0 flex items-end justify-center gap-2 opacity-20 pointer-events-none">
         {[...Array(20)].map((_, i) => (
@@ -86,7 +92,7 @@ const Podcast: React.FC = () => {
              initial={{ opacity: 0, y: 30 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8 }}
-             className="relative z-10"
+             className="relative z-10 w-full flex flex-col items-center"
            >
              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-md mb-8 shadow-[0_0_20px_rgba(37,99,235,0.2)]">
                 <span className="relative flex h-2 w-2">
@@ -96,9 +102,13 @@ const Podcast: React.FC = () => {
                 <span className="text-xs font-bold uppercase tracking-widest text-blue-400">Coming 2025</span>
              </div>
 
-             <h1 className="text-7xl md:text-9xl font-bold uppercase font-['Oswald'] tracking-tighter leading-[0.85] mb-6 drop-shadow-2xl">
-               0to<span className="text-transparent text-stroke-blue hover:text-white transition-colors duration-500 relative">N</span>
-             </h1>
+             <div className="mb-10 w-full max-w-4xl flex justify-center">
+                 <img 
+                    src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1767971895/Asset_1_zryrdv.png" 
+                    alt="0toN Podcast Logo" 
+                    className="w-full max-w-[200px] md:max-w-[300px] h-auto object-contain drop-shadow-2xl"
+                 />
+             </div>
              
              <p className="text-xl md:text-2xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed mb-12">
                The unfiltered voice of MEA’s operational leaders. <br/>
@@ -115,6 +125,7 @@ const Podcast: React.FC = () => {
                   { icon: <SpotifyIcon />, label: "Spotify" },
                   { icon: <AppleIcon />, label: "Apple" },
                   { icon: <YouTubeIcon />, label: "YouTube" },
+                  { icon: <GooglePodcastsIcon />, label: "Google" },
                 ].map((platform, idx) => (
                   <a 
                     key={idx}

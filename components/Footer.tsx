@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
                 
                 <div className="flex gap-4">
                     {[
-                      { icon: <Linkedin className="w-5 h-5" />, href: "#" },
+                      { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/in/rachidlabrik/" },
                       { icon: <XIcon />, href: "#" },
                       { icon: <Youtube className="w-5 h-5" />, href: "#" },
                       { icon: <Instagram className="w-5 h-5" />, href: "#" },
@@ -65,6 +65,8 @@ const Footer: React.FC = () => {
                       <a 
                         key={i}
                         href={social.href} 
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all duration-300 group"
                       >
                         <div className="group-hover:scale-110 transition-transform">

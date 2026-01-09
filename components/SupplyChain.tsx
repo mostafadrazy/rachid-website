@@ -3,7 +3,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ChartBar, ArrowRight, Factory, ShoppingBag, Truck, Pill, Car, Activity } from 'lucide-react';
 
-// Fixed missing '<' in motion.div
 const StepCard: React.FC<{ number: string; title: string; delay: number; isLast?: boolean }> = ({ number, title, delay, isLast }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
@@ -94,19 +93,20 @@ const SupplyChain: React.FC = () => {
                 viewport={{ once: true }}
                 className="relative z-20"
               >
-                 <h2 className="text-7xl md:text-9xl font-bold uppercase font-['Oswald'] leading-[0.8] tracking-tighter mb-12 text-white">
-                    Why <br/>
-                    <span className="text-transparent text-stroke-blue">Supply</span><br/>
-                    <span className="text-blue-600">Chain?</span>
+                 <h2 className="text-7xl md:text-9xl font-bold uppercase font-['Oswald'] leading-[0.8] tracking-tighter mb-12 text-white text-wrap">
+                    WHY <br/>
+                    <span className="text-transparent text-stroke-blue">SUPPLY</span><br/>
+                    <span className="text-blue-600">CHAIN?</span>
                  </h2>
 
                  <div className="glass p-10 border-l-4 border-blue-600 relative overflow-hidden group backdrop-blur-xl bg-white/5">
                     <p className="text-2xl md:text-3xl font-['Oswald'] text-white uppercase mb-6 leading-tight relative z-10">
-                       "Because without it, ambition is just hallucination."
+                       “Because without it, strategy never scales.”
                     </p>
-                    <p className="text-gray-400 text-lg font-light leading-relaxed relative z-10">
-                       I don't just fix operations. I build the <span className="text-white font-bold">invisible architecture</span> that allows businesses to keep their promises at scale. Moving from <span className="line-through text-gray-500">reactive chaos</span> to <span className="text-blue-400 font-bold">predictable growth</span>.
-                    </p>
+                    <div className="text-gray-400 text-lg font-light leading-relaxed relative z-10 space-y-4">
+                       <p>Building on proven best practices and real transformation experience. I help businesses align demand, inventory, and execution so they deliver reliably at scale.</p>
+                       <p>Moving from operational friction to sustained competitive advantage, with change management and adoption as a priority.</p>
+                    </div>
                  </div>
               </motion.div>
 

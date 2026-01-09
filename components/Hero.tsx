@@ -70,7 +70,7 @@ const Hero: React.FC = () => {
         >
             <div className="mb-6 md:mb-8">
               <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold font-['Oswald'] text-white leading-[0.9] tracking-tight drop-shadow-2xl uppercase">
-                I Build <span className="text-transparent text-stroke-blue hover:text-white transition-colors duration-500">Systems</span>,<br />
+                I Build <span className="text-white hover:text-blue-500 transition-colors duration-500">Systems</span>,<br />
                 Stories, and <br/>
                 <span className="text-blue-600 relative inline-block">
                   Teams That Last
@@ -80,7 +80,7 @@ const Hero: React.FC = () => {
             </div>
 
             <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium max-w-3xl md:max-w-4xl mb-8 md:mb-12 leading-relaxed px-4">
-              From a small village on the south of Morocco to leading transformations across continents, my mission is simple: <span className="font-bold text-blue-600">Build, Elevate, and Inspire.</span>
+              My mission is simple: <span className="font-bold text-blue-600">Build, Elevate, and Inspire.</span>
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col md:flex-row gap-4 md:gap-6 w-full md:w-auto justify-center items-center">

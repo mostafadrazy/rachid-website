@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Clock, Tag, Calendar, ChevronRight, Share2, Database, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Clock, Tag, Calendar, ChevronRight, Share2, Database, ExternalLink, Check } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 interface BlogPost {
@@ -21,6 +21,7 @@ const Blog: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [configError, setConfigError] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
@@ -46,6 +47,26 @@ const Blog: React.FC = () => {
     
     initializeBlog();
   }, []);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const postId = params.get('id');
+      
+      if (!postId) {
+        setSelectedPost(null);
+      } else if (posts.length > 0) {
+        const post = posts.find(p => p.id === postId);
+        if (post) {
+          setSelectedPost(post);
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [posts]);
 
   const fetchPosts = async (): Promise<BlogPost[] | null> => {
     setLoading(true);
@@ -74,9 +95,21 @@ const Blog: React.FC = () => {
 
   const handleBackToArchive = () => {
     setSelectedPost(null);
-    // Clear the query parameter from the URL when going back
-    const newUrl = window.location.pathname;
-    window.history.pushState({}, '', newUrl);
+    window.history.pushState({}, '', '/blog');
+  };
+
+  const handlePostClick = (post: BlogPost) => {
+    setSelectedPost(post);
+    window.history.pushState({}, '', `/blog?id=${post.id}`);
+    window.scrollTo(0, 0);
+  };
+
+  const handleShare = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   if (configError) {
@@ -147,8 +180,12 @@ const Blog: React.FC = () => {
                    <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Global Supply Chain Leader</p>
                 </div>
              </div>
-             <button className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 transition-all group">
-                <Share2 size={16} className="group-hover:scale-110 transition-transform" />
+             <button 
+               onClick={handleShare}
+               className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 transition-all group relative"
+               title="Copy Link"
+             >
+                {copied ? <Check size={16} /> : <Share2 size={16} className="group-hover:scale-110 transition-transform" />}
              </button>
           </div>
         </div>
@@ -192,7 +229,7 @@ const Blog: React.FC = () => {
               <motion.div
                 key={post.id}
                 whileHover={{ y: -10 }}
-                onClick={() => setSelectedPost(post)}
+                onClick={() => handlePostClick(post)}
                 className="group relative h-[500px] bg-[#0a0a0a] border border-white/10 overflow-hidden cursor-pointer rounded-sm"
               >
                 <div className="absolute inset-0 z-0">
