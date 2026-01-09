@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Clock, Tag, Calendar, ChevronRight, Share2, Database, ExternalLink, Check } from 'lucide-react';
+import { ArrowLeft, Clock, Tag, Calendar, ChevronRight, Share2, Database, ExternalLink, Check, Filter, ArrowUp, ArrowDown } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 interface BlogPost {
@@ -22,6 +22,11 @@ const Blog: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [configError, setConfigError] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Filtering & Sorting State
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeYear, setActiveYear] = useState('All');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
@@ -111,6 +116,35 @@ const Blog: React.FC = () => {
       setTimeout(() => setCopied(false), 2000);
     });
   };
+
+  // --- Filtering Logic ---
+  
+  // Extract unique categories
+  const categories = useMemo(() => {
+    const cats = new Set(posts.map(p => p.category).filter(Boolean));
+    return ['All', ...Array.from(cats)];
+  }, [posts]);
+
+  // Extract unique years
+  const years = useMemo(() => {
+    const yrs = new Set(posts.map(p => new Date(p.created_at).getFullYear().toString()));
+    return ['All', ...Array.from(yrs).sort().reverse()];
+  }, [posts]);
+
+  const filteredPosts = useMemo(() => {
+    return posts
+      .filter(post => {
+        const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
+        const matchesYear = activeYear === 'All' || new Date(post.created_at).getFullYear().toString() === activeYear;
+        return matchesCategory && matchesYear;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.created_at).getTime();
+        const dateB = new Date(b.created_at).getTime();
+        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+      });
+  }, [posts, activeCategory, activeYear, sortOrder]);
+
 
   if (configError) {
     return (
@@ -212,12 +246,76 @@ const Blog: React.FC = () => {
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-900/5 rounded-full blur-[120px] pointer-events-none" />
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <header className="mb-20">
+        <header className="mb-16">
           <span className="text-blue-600 font-bold tracking-[0.4em] uppercase text-xs mb-4 block">Archive & Insights</span>
           <h2 className="text-6xl md:text-9xl font-bold uppercase font-['Oswald'] leading-[0.8] tracking-tighter text-white">
             Strategic <br/> <span className="text-transparent text-stroke-blue">Perspective</span>
           </h2>
         </header>
+
+        {/* --- FILTER & SORT TOOLBAR --- */}
+        {!loading && posts.length > 0 && (
+          <div className="mb-16 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-8 border-y border-white/10 py-6 bg-white/5 backdrop-blur-sm px-6 -mx-6 md:mx-0 md:px-6 md:rounded-sm">
+             
+             {/* Category Filter */}
+             <div className="flex flex-col md:flex-row items-start md:items-center gap-6 w-full xl:w-auto">
+               <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                  <Filter size={14} className="text-blue-500" /> Filter:
+               </div>
+               <div className="flex flex-wrap gap-3">
+                  {categories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-sm transition-all border ${
+                        activeCategory === cat 
+                          ? 'bg-blue-600 border-blue-600 text-white' 
+                          : 'bg-transparent border-white/10 text-gray-400 hover:border-white/30 hover:text-white'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+               </div>
+             </div>
+
+             {/* Date & Sort Controls */}
+             <div className="flex flex-wrap items-center gap-6 w-full xl:w-auto justify-between md:justify-end">
+                
+                {/* Year Filter */}
+                <div className="flex items-center gap-3">
+                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">Year:</span>
+                   <div className="relative group">
+                     <select 
+                        value={activeYear}
+                        onChange={(e) => setActiveYear(e.target.value)}
+                        className="appearance-none bg-[#0a0a0a] border border-white/20 text-white pl-4 pr-10 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-blue-600 cursor-pointer rounded-sm hover:bg-white/5 transition-colors"
+                     >
+                        {years.map(y => <option key={y} value={y}>{y}</option>)}
+                     </select>
+                     <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                        <ChevronRight size={12} className="rotate-90" />
+                     </div>
+                   </div>
+                </div>
+
+                <div className="w-[1px] h-6 bg-white/10 hidden md:block"></div>
+
+                {/* Sort Toggle */}
+                <button 
+                  onClick={() => setSortOrder(prev => prev === 'newest' ? 'oldest' : 'newest')}
+                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white group transition-colors"
+                >
+                   Sort: 
+                   <span className="flex items-center gap-1 text-white group-hover:text-blue-500 transition-colors">
+                      {sortOrder === 'newest' ? 'Newest' : 'Oldest'}
+                      {sortOrder === 'newest' ? <ArrowDown size={14} /> : <ArrowUp size={14} />}
+                   </span>
+                </button>
+
+             </div>
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center py-40">
@@ -225,9 +323,15 @@ const Blog: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
+            <AnimatePresence mode="popLayout">
+            {filteredPosts.map((post) => (
               <motion.div
                 key={post.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
                 whileHover={{ y: -10 }}
                 onClick={() => handlePostClick(post)}
                 className="group relative h-[500px] bg-[#0a0a0a] border border-white/10 overflow-hidden cursor-pointer rounded-sm"
@@ -240,7 +344,7 @@ const Blog: React.FC = () => {
                 <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end">
                   <div className="flex items-center gap-4 mb-4 text-[9px] font-bold uppercase tracking-widest text-blue-400">
                     <span className="bg-blue-600/20 px-2 py-1 border border-blue-500/20">{post.category}</span>
-                    <span>{post.read_time}</span>
+                    <span>{new Date(post.created_at).getFullYear()}</span>
                   </div>
                   <h3 className="text-3xl font-bold font-['Oswald'] uppercase text-white leading-none mb-4 group-hover:text-blue-100 transition-colors">
                     {post.title}
@@ -255,9 +359,14 @@ const Blog: React.FC = () => {
                 <div className="absolute bottom-0 left-0 h-1 w-0 bg-blue-600 group-hover:w-full transition-all duration-700"></div>
               </motion.div>
             ))}
-            {posts.length === 0 && !loading && (
+            </AnimatePresence>
+            
+            {filteredPosts.length === 0 && !loading && (
               <div className="col-span-full py-24 text-center border border-dashed border-white/10 text-gray-500 uppercase tracking-[0.3em] text-[10px] font-bold">
-                Archive currently empty. Check back for future transmissions.
+                 No transmissions found matching current parameters.
+                 <button onClick={() => {setActiveCategory('All'); setActiveYear('All')}} className="block mx-auto mt-4 text-blue-500 hover:text-white transition-colors">
+                    Reset Filters
+                 </button>
               </div>
             )}
           </div>
