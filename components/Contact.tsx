@@ -18,7 +18,7 @@ const Contact: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const FORMSPREE_ENDPOINT = "https://formspree.io/f/maqwoelk";
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/mqearzap";
 
     try {
       const response = await fetch(FORMSPREE_ENDPOINT, {
