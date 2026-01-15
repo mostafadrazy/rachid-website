@@ -1,16 +1,8 @@
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 
 const Story: React.FC = () => {
-  const targetRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start start", "end end"]
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
-
   const chapters = [
     {
       id: "01",
@@ -40,14 +32,20 @@ const Story: React.FC = () => {
   ];
 
   return (
-    <section ref={targetRef} id="story" className="relative bg-[#050505] text-white py-32">
+    <section id="story" className="relative bg-[#050505] text-white py-32">
       <div className="container mx-auto px-6 md:px-12">
         
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-24">
           
           {/* Sticky Sidebar */}
           <div className="lg:w-1/3 lg:h-screen lg:sticky lg:top-0 flex flex-col justify-center py-12 lg:py-0">
-            <motion.div style={{ opacity }} className="relative">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative"
+            >
               <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Biography</span>
               <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold uppercase font-['Oswald'] leading-none mb-8">
                 A Journey of <br/> Growth

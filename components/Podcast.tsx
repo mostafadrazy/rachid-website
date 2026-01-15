@@ -106,11 +106,11 @@ const Podcast: React.FC = () => {
                  <img 
                     src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1767971895/Asset_1_zryrdv.png" 
                     alt="0toN Podcast Logo" 
-                    className="w-full max-w-[200px] md:max-w-[300px] h-auto object-contain drop-shadow-2xl"
+                    className="w-full max-w-[160px] md:max-w-[240px] h-auto object-contain drop-shadow-2xl"
                  />
              </div>
              
-             <p className="text-xl md:text-2xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed mb-12">
+             <p className="text-lg md:text-xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed mb-12">
                The unfiltered voice of MEA’s operational leaders. <br/>
                <span className="text-white font-medium">Strategic. Human. Future-Ready.</span>
              </p>
@@ -168,7 +168,7 @@ const Podcast: React.FC = () => {
 
            <div className="order-1 lg:order-2 space-y-10">
               <div className="inline-block px-4 py-1 border border-blue-600/30 rounded-full text-blue-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Season 1</div>
-              <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald'] leading-[0.9]">
+              <h2 className="text-4xl md:text-6xl font-bold uppercase font-['Oswald'] leading-[0.9]">
                 Builders of the <br/> <span className="text-transparent text-stroke hover:text-white transition-colors duration-500 relative">MEA Future</span>
               </h2>
               
@@ -307,7 +307,7 @@ const Podcast: React.FC = () => {
              viewport={{ once: true }}
              className="relative z-10"
            >
-              <h2 className="text-6xl md:text-8xl font-bold uppercase font-['Oswald'] mb-8 leading-[0.85]">
+              <h2 className="text-5xl md:text-7xl font-bold uppercase font-['Oswald'] mb-8 leading-[0.85]">
                  Ready To <br/> <span className="text-transparent text-stroke hover:text-white transition-colors duration-500">Tune In?</span>
               </h2>
               <p className="text-xl text-gray-400 mb-12 max-w-xl mx-auto font-light">

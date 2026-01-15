@@ -53,7 +53,7 @@ const App: React.FC = () => {
       if (path === '/about') setView('about');
       else if (path === '/speaking') setView('speaking');
       else if (path === '/supply-chain') setView('supply-chain');
-      else if (path === '/podcast') setView('podcast');
+      else if (path === '/zero-to-n') setView('podcast');
       else if (path === '/blog') setView('blog');
       else if (path === '/admin') setView('admin');
       else if (path === '/contact') setView('contact');
@@ -78,7 +78,7 @@ const App: React.FC = () => {
     if (path === '/about') newView = 'about';
     else if (path === '/speaking') newView = 'speaking';
     else if (path === '/supply-chain') newView = 'supply-chain';
-    else if (path === '/podcast') newView = 'podcast';
+    else if (path === '/zero-to-n') newView = 'podcast';
     else if (path === '/blog') newView = 'blog';
     else if (path === '/admin') newView = 'admin';
     else if (path === '/contact') newView = 'contact';
@@ -90,6 +90,7 @@ const App: React.FC = () => {
 
   const getCurrentPath = () => {
     if (view === 'home') return '/';
+    if (view === 'podcast') return '/zero-to-n';
     if (view === '404') return window.location.pathname;
     return `/${view}`;
   };

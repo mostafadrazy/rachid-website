@@ -31,7 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
     { name: 'Supply Chain', href: '/supply-chain' },
     { name: 'Blog', href: '/blog' },
     { name: 'Speaking', href: '/speaking' },
-    { name: 'Podcast', href: '/podcast' },
+    { name: 'Podcast', href: '/zero-to-n' },
   ];
 
   return (

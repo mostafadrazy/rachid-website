@@ -167,7 +167,7 @@ const Speaking: React.FC = () => {
                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-400">Global Keynote Speaker</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold uppercase font-['Oswald'] font-bold leading-[0.85] tracking-tighter text-white drop-shadow-2xl max-w-6xl mx-auto">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold uppercase font-['Oswald'] font-bold leading-[0.9] tracking-tighter text-white drop-shadow-2xl max-w-6xl mx-auto">
               <span className="block mb-2">Lessons From</span>
               <span className="text-transparent text-stroke-blue hover:text-white transition-all duration-700 block mb-2">Discomfort,</span>
               <span className="block mb-2">Decision-Making &</span>
