@@ -13,7 +13,7 @@ const AppleIcon = () => (
    <svg viewBox="0 0 22.773 22.773" fill="currentColor" className="w-5 h-5">
      <g>
         <path d="M15.769,0c0.053,0,0.106,0,0.162,0c0.13,1.606-0.483,2.806-1.228,3.675c-0.731,0.863-1.732,1.7-3.351,1.573c-0.108-1.583,0.506-2.694,1.25-3.561C13.292,0.879,14.557,0.16,15.769,0z"/>
-        <path d="M20.67,16.716c0,0.016,0,0.03,0,0.045c-0.455,1.378-1.104,2.559-1.896,3.655c-0.723,0.995-1.609,2.334-3.191,2.334c-1.367,0-2.275-0.879-3.676-0.903c-1.482-0.024-2.297,0.735-3.652,0.926c-0.155,0-0.31,0-0.462,0c-0.995-0.144-1.798-0.932-2.383-1.642c-1.725-2.098-3.058-4.808-3.306-8.276c0-0.34,0-0.679,0-1.019c0.105-2.482,1.311-4.5,2.914-5.478c0.846-0.52,2.009-0.963,3.304-0.765c0.555,0.086,1.122,0.276,1.619,0.464c0.471,0.181,1.06,0.502,1.618,0.485c0.378-0.011,0.754-0.208,1.135-0.347c1.116-0.403,2.21-0.865,3.652-0.648c1.733,0.262,2.963,1.032,3.723,2.22c-1.466,0.933-2.625,2.339-2.427,4.74C17.818,14.688,19.086,15.964,20.67,16.716z"/>
+        <path d="M20.67,16.716c0,0.016,0,0.03,0,0.045c-0.455,1.378-1.104,2.559-1.896,3.655c-0.723,0.995-1.609,2.334-3.191,2.334c-1.367,0-2.275-0.879-3.676-0.903c-1.482-0.024-2.297,0.735-3.652,0.926c-0.155,0-0.31,0-0.462,0c-0.995-0.144-1.798-0.932-2.383-1.642c-1.725-2.098-3.058-4.808-3.306-8.276c0-0.34,0-0.679,0-1.019c0.105-2.482,1.311-4.5,2.914-5.478c0.846-0.52,2.009-0.963,3.304-0.765c0.555,0.086,1.122,0.276,1.619,0.464c0.471,0.181,1.06,0.502,1.619,0.485c0.378-0.011,0.754-0.208,1.135-0.347c1.116-0.403,2.21-0.865,3.652-0.648c1.733,0.262,2.963,1.032,3.723,2.22c-1.466,0.933-2.625,2.339-2.427,4.74C17.818,14.688,19.086,15.964,20.67,16.716z"/>
      </g>
    </svg>
 );
@@ -28,24 +28,6 @@ const GooglePodcastsIcon = () => (
     <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
         <path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81z"/>
     </svg>
-);
-
-const AudioWaveParams: React.FC = () => (
-    <div className="absolute inset-0 flex items-end justify-center gap-2 opacity-20 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-            <motion.div 
-                key={i}
-                className="w-2 md:w-4 bg-blue-600 rounded-t-lg"
-                animate={{ height: ["10%", `${Math.random() * 60 + 20}%`, "10%"] }}
-                transition={{
-                    duration: Math.random() * 1.5 + 0.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: i * 0.05
-                }}
-            />
-        ))}
-    </div>
 );
 
 const Podcast: React.FC = () => {
@@ -64,80 +46,131 @@ const Podcast: React.FC = () => {
   };
 
   return (
-    <section id="podcast" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen pt-32 pb-24 overflow-hidden">
+    <section id="podcast" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen overflow-hidden">
       
-      {/* Background Image Layer */}
-      <div className="absolute inset-0 z-0">
-          <img 
-              src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1766746478/IMG_0178_loq4p6.jpg" 
-              alt="Podcast Background" 
-              className="w-full h-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-[#050505]/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#050505]/50 to-transparent"></div>
-      </div>
-
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
-         <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-900/10 rounded-full blur-[150px] mix-blend-screen"></div>
-         <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[150px] mix-blend-screen"></div>
+      {/* Immersive Background Layers */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+          <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-blue-900/10 rounded-full blur-[180px] mix-blend-screen opacity-60"></div>
+          <div className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[150px] mix-blend-screen opacity-40"></div>
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]"></div>
       </div>
       
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
+      <div className="container mx-auto px-6 md:px-12 relative z-10 pt-32 pb-24">
         
-        {/* --- HERO SECTION --- */}
-        <div className="relative h-[70vh] flex flex-col justify-center items-center text-center mb-24">
-           <AudioWaveParams />
+        {/* --- CINEMATIC HERO SECTION --- */}
+        <div className="flex flex-col items-center justify-center min-h-[85vh] mb-32 relative">
            
-           <motion.div
-             initial={{ opacity: 0, y: 30 }}
+           {/* Floating Status Badge */}
+           <motion.div 
+             initial={{ opacity: 0, y: -20 }}
              animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.8 }}
-             className="relative z-10 w-full flex flex-col items-center"
+             transition={{ duration: 0.6 }}
+             className="mb-10"
            >
-             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-md mb-8 shadow-[0_0_20px_rgba(37,99,235,0.2)]">
+             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-md shadow-[0_0_25px_rgba(37,99,235,0.25)] hover:bg-blue-500/20 transition-all">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                 </span>
-                <span className="text-xs font-bold uppercase tracking-widest text-blue-400">Coming 2025</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-blue-300">Season 1 • Coming 2025</span>
              </div>
-
-             <div className="mb-10 w-full max-w-4xl flex justify-center">
-                 <img 
-                    src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1767971895/Asset_1_zryrdv.png" 
-                    alt="0toN Podcast Logo" 
-                    className="w-full max-w-[160px] md:max-w-[240px] h-auto object-contain drop-shadow-2xl"
-                 />
-             </div>
-             
-             <p className="text-lg md:text-xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed mb-12">
-               The unfiltered voice of MEA’s operational leaders. <br/>
-               <span className="text-white font-medium">Strategic. Human. Future-Ready.</span>
-             </p>
-
-             <motion.div 
-               initial={{ y: 50, opacity: 0 }}
-               animate={{ y: 0, opacity: 1 }}
-               transition={{ delay: 0.4, duration: 0.8 }}
-               className="inline-flex flex-wrap justify-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl"
-             >
-                {[
-                  { icon: <SpotifyIcon />, label: "Spotify" },
-                  { icon: <AppleIcon />, label: "Apple" },
-                  { icon: <YouTubeIcon />, label: "YouTube" },
-                  { icon: <GooglePodcastsIcon />, label: "Google" },
-                ].map((platform, idx) => (
-                  <a 
-                    key={idx}
-                    href="#"
-                    className="flex items-center gap-3 px-6 py-3 rounded-xl bg-black/40 border border-white/5 hover:bg-blue-600 hover:border-blue-500 hover:text-white transition-all duration-300 group"
-                  >
-                    <span className="text-gray-400 group-hover:text-white transition-colors">{platform.icon}</span>
-                    <span className="text-xs font-bold uppercase tracking-widest text-gray-300 group-hover:text-white">{platform.label}</span>
-                  </a>
-                ))}
-             </motion.div>
            </motion.div>
+
+           {/* Hero Logo */}
+           <motion.div
+             initial={{ opacity: 0, scale: 0.9 }}
+             animate={{ opacity: 1, scale: 1 }}
+             transition={{ duration: 0.8 }}
+             className="mb-12 relative z-10"
+           >
+              <img 
+                src="https://res.cloudinary.com/dmnqlruhl/image/upload/v1767971895/Asset_1_zryrdv.png" 
+                alt="0toN Logo" 
+                className="w-56 md:w-80 h-auto object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] hover:drop-shadow-[0_0_50px_rgba(37,99,235,0.3)] transition-all duration-700"
+              />
+           </motion.div>
+
+           {/* THE VIDEO FRAME - CENTERPIECE */}
+           <motion.div 
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.2, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full max-w-6xl mx-auto group z-20"
+           >
+              {/* Glow Effect Behind */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 via-blue-400/10 to-blue-600/20 rounded-2xl blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-1000"></div>
+              
+              {/* Glass Container */}
+              <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] ring-1 ring-white/5 overflow-hidden shadow-2xl">
+                 {/* Top Bar (Browser/Player like) */}
+                 <div className="h-10 bg-[#111]/80 backdrop-blur-xl border-b border-white/5 flex items-center px-6 gap-2">
+                    <div className="flex gap-2">
+                        <div className="w-2.5 h-2.5 rounded-full bg-white/10 group-hover:bg-red-500/80 transition-colors duration-300"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-white/10 group-hover:bg-yellow-500/80 transition-colors duration-300"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-white/10 group-hover:bg-green-500/80 transition-colors duration-300"></div>
+                    </div>
+                    <div className="mx-auto text-[9px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                         <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+                         Official_Teaser_Trailer.mp4
+                    </div>
+                    <div className="w-12"></div> {/* Spacer balance */}
+                 </div>
+
+                 {/* Video Area */}
+                 <div className="aspect-video w-full bg-black relative">
+                    <iframe 
+                      src="https://player.vimeo.com/video/1154623042?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" 
+                      className="absolute top-0 left-0 w-full h-full" 
+                      frameBorder="0" 
+                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
+                      allowFullScreen
+                      title="Zero to N Podcast Trailer"
+                    ></iframe>
+                 </div>
+              </div>
+
+              {/* Decorative elements around frame */}
+              <div className="absolute -left-8 top-1/2 -translate-y-1/2 w-[1px] h-32 bg-gradient-to-b from-transparent via-blue-600/40 to-transparent hidden xl:block"></div>
+              <div className="absolute -right-8 top-1/2 -translate-y-1/2 w-[1px] h-32 bg-gradient-to-b from-transparent via-blue-600/40 to-transparent hidden xl:block"></div>
+           </motion.div>
+
+
+           {/* Description & Links (Below Video) */}
+           <div className="mt-20 flex flex-col items-center text-center max-w-3xl mx-auto relative z-10">
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="text-xl md:text-3xl font-light font-['Syne'] text-gray-300 leading-relaxed mb-10"
+              >
+                The unfiltered voice of MEA’s operational leaders. <br/>
+                <strong className="text-white">Strategic. Human. Future-Ready.</strong>
+              </motion.p>
+
+              <motion.div 
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.8 }}
+                 className="flex flex-wrap justify-center gap-4"
+              >
+                  {[
+                    { icon: <SpotifyIcon />, label: "Spotify" },
+                    { icon: <AppleIcon />, label: "Apple" },
+                    { icon: <YouTubeIcon />, label: "YouTube" },
+                    { icon: <GooglePodcastsIcon />, label: "Google" },
+                  ].map((platform, idx) => (
+                    <a 
+                      key={idx}
+                      href="#"
+                      className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 hover:text-white transition-all duration-300 group backdrop-blur-sm"
+                    >
+                      <span className="text-gray-400 group-hover:text-white transition-colors w-5 h-5">{platform.icon}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-300 group-hover:text-white">{platform.label}</span>
+                    </a>
+                  ))}
+              </motion.div>
+           </div>
+
         </div>
 
 
