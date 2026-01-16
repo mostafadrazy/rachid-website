@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Mic, Globe, Radio, Users, CirclePlay, ArrowRight, Activity, Headphones, Target, Layers, Cast, Play, Share2 } from 'lucide-react';
+import { Mic, Globe, ArrowRight, Headphones, Target, Layers, Play, Share2, Linkedin } from 'lucide-react';
 
 const SpotifyIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -24,10 +24,10 @@ const YouTubeIcon = () => (
   </svg>
 );
 
-const GooglePodcastsIcon = () => (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-        <path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81z"/>
-    </svg>
+const TikTokIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+  </svg>
 );
 
 const Podcast: React.FC = () => {
@@ -154,14 +154,17 @@ const Podcast: React.FC = () => {
                  className="flex flex-wrap justify-center gap-4"
               >
                   {[
-                    { icon: <SpotifyIcon />, label: "Spotify" },
-                    { icon: <AppleIcon />, label: "Apple" },
-                    { icon: <YouTubeIcon />, label: "YouTube" },
-                    { icon: <GooglePodcastsIcon />, label: "Google" },
+                    { icon: <SpotifyIcon />, label: "Spotify", href: "https://open.spotify.com/show/7ojBlNz4QzU9hby09R7ibZ" },
+                    { icon: <AppleIcon />, label: "Apple", href: "#" },
+                    { icon: <YouTubeIcon />, label: "YouTube", href: "https://www.youtube.com/@0toNpodcast" },
+                    { icon: <Linkedin size={20} />, label: "LinkedIn", href: "https://www.linkedin.com/company/zero-to-n-podcast" },
+                    { icon: <TikTokIcon />, label: "TikTok", href: "https://www.tiktok.com/@0tonpodcast" },
                   ].map((platform, idx) => (
                     <a 
                       key={idx}
-                      href="#"
+                      href={platform.href}
+                      target={platform.href !== '#' ? "_blank" : undefined}
+                      rel={platform.href !== '#' ? "noopener noreferrer" : undefined}
                       className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 hover:text-white transition-all duration-300 group backdrop-blur-sm"
                     >
                       <span className="text-gray-400 group-hover:text-white transition-colors w-5 h-5">{platform.icon}</span>
@@ -229,7 +232,9 @@ const Podcast: React.FC = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                    <a 
-                     href="#"
+                     href="https://open.spotify.com/show/7ojBlNz4QzU9hby09R7ibZ"
+                     target="_blank"
+                     rel="noopener noreferrer"
                      className="px-8 py-4 bg-blue-600 text-white font-bold uppercase tracking-widest text-xs hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
                    >
                       <Play size={12} fill="currentColor" /> Listen to Latest Episode

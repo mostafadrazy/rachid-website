@@ -18,9 +18,11 @@ import Podcast from './components/Podcast';
 import Blog from './components/Blog';
 import Admin from './components/Admin';
 import Contact from './components/Contact';
+import Privacy from './components/Privacy';
+import Terms from './components/Terms';
 import NotFound from './components/NotFound';
 
-type ViewType = 'home' | 'about' | 'speaking' | 'supply-chain' | 'podcast' | 'blog' | 'admin' | 'contact' | '404';
+type ViewType = 'home' | 'about' | 'speaking' | 'supply-chain' | 'podcast' | 'blog' | 'admin' | 'contact' | 'privacy' | 'terms' | '404';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -57,6 +59,8 @@ const App: React.FC = () => {
       else if (path === '/blog') setView('blog');
       else if (path === '/admin') setView('admin');
       else if (path === '/contact') setView('contact');
+      else if (path === '/privacy') setView('privacy');
+      else if (path === '/terms') setView('terms');
       else if (path === '/') setView('home');
       else setView('404');
     };
@@ -82,6 +86,8 @@ const App: React.FC = () => {
     else if (path === '/blog') newView = 'blog';
     else if (path === '/admin') newView = 'admin';
     else if (path === '/contact') newView = 'contact';
+    else if (path === '/privacy') newView = 'privacy';
+    else if (path === '/terms') newView = 'terms';
     else if (path !== '/') newView = '404';
 
     setView(newView);
@@ -114,6 +120,8 @@ const App: React.FC = () => {
               {view === 'blog' && <Blog />}
               {view === 'admin' && <Admin />}
               {view === 'contact' && <Contact />}
+              {view === 'privacy' && <Privacy onNavigate={navigate} />}
+              {view === 'terms' && <Terms onNavigate={navigate} />}
               {view === '404' && <NotFound />}
               {view === 'home' && (
                 <>
@@ -125,7 +133,7 @@ const App: React.FC = () => {
                 </>
               )}
             </main>
-            <Footer />
+            <Footer onNavigate={navigate} />
           </div>
         </div>
       )}

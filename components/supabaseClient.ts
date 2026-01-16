@@ -12,9 +12,18 @@ const SUPABASE_ANON_KEY = 'sb_publishable_GucJtc5JD42EhI1jfvDIXA_3FvdLauJ';
 // Validation to ensure client doesn't crash on initialization
 const isReady = SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes('YOUR_PROJECT_ID');
 
-export const supabase = isReady 
-  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
+let supabaseInstance = null;
+
+if (isReady) {
+  try {
+    supabaseInstance = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (error) {
+    console.warn("Supabase failed to initialize:", error);
+    supabaseInstance = null;
+  }
+}
+
+export const supabase = supabaseInstance;
 
 /**
  * Helper to check if the user has provided real credentials.
