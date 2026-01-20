@@ -119,10 +119,10 @@ const Podcast: React.FC = () => {
                  {/* Video Area */}
                  <div className="aspect-video w-full bg-black relative">
                     <iframe 
-                      src="https://player.vimeo.com/video/1154623042?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" 
+                      src="https://www.youtube.com/embed/W2-mdR3ZbaY?rel=0" 
                       className="absolute top-0 left-0 w-full h-full" 
                       frameBorder="0" 
-                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                       allowFullScreen
                       title="Zero to N Podcast Trailer"
                     ></iframe>
