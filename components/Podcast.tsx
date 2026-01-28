@@ -1,7 +1,7 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Mic, Globe, ArrowRight, Headphones, Target, Layers, Play, Share2, Linkedin } from 'lucide-react';
+import { Mic, Globe, ArrowRight, Headphones, Target, Layers, Play, Share2, Linkedin, ExternalLink } from 'lucide-react';
 
 const SpotifyIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -32,6 +32,7 @@ const TikTokIcon = () => (
 
 const Podcast: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
@@ -44,6 +45,10 @@ const Podcast: React.FC = () => {
     window.history.pushState({}, '', path);
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
+
+  const videoId = "W2-mdR3ZbaY";
+  const videoLink = `https://www.youtube.com/watch?v=${videoId}`;
+  const thumbnail = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
   return (
     <section id="podcast" ref={containerRef} className="relative bg-[#050505] text-white min-h-screen overflow-hidden">
@@ -116,16 +121,50 @@ const Podcast: React.FC = () => {
                     <div className="w-12"></div> {/* Spacer balance */}
                  </div>
 
-                 {/* Video Area */}
-                 <div className="aspect-video w-full bg-black relative">
-                    <iframe 
-                      src="https://www.youtube.com/embed/W2-mdR3ZbaY?rel=0" 
-                      className="absolute top-0 left-0 w-full h-full" 
-                      frameBorder="0" 
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                      allowFullScreen
-                      title="Zero to N Podcast Trailer"
-                    ></iframe>
+                 {/* Video Facade (Click to Load) */}
+                 <div className="aspect-video w-full bg-black relative group overflow-hidden">
+                    {!isPlaying ? (
+                       <button 
+                         onClick={() => setIsPlaying(true)}
+                         className="absolute inset-0 w-full h-full cursor-pointer focus:outline-none z-30"
+                         aria-label="Play Trailer"
+                       >
+                         <img 
+                           src={thumbnail} 
+                           alt="Trailer Thumbnail" 
+                           className="w-full h-full object-cover opacity-80 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"
+                           loading="eager"
+                         />
+                         
+                         <div className="absolute inset-0 flex items-center justify-center z-20">
+                             {/* Play Button with Pulse */}
+                             <div className="relative">
+                                 <div className="absolute inset-0 bg-blue-600 rounded-full animate-ping opacity-20"></div>
+                                 <div className="relative w-24 h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 transition-all duration-300 shadow-2xl">
+                                     <Play size={32} fill="currentColor" className="ml-1 text-white" />
+                                 </div>
+                             </div>
+                         </div>
+                         
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+                         
+                         <div className="absolute bottom-6 left-6 z-20 pointer-events-none text-left">
+                             <p className="text-white font-['Oswald'] uppercase text-xl font-bold mb-1">Watch The Trailer</p>
+                             <p className="text-gray-400 text-xs tracking-widest flex items-center gap-2">
+                                Click to Play
+                             </p>
+                         </div>
+                       </button>
+                    ) : (
+                       <iframe 
+                         src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+                         className="absolute inset-0 w-full h-full"
+                         frameBorder="0" 
+                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                         allowFullScreen
+                         title="Zero to N Podcast Trailer"
+                       ></iframe>
+                    )}
                  </div>
               </div>
 
@@ -137,6 +176,17 @@ const Podcast: React.FC = () => {
 
            {/* Description & Links (Below Video) */}
            <div className="mt-20 flex flex-col items-center text-center max-w-3xl mx-auto relative z-10">
+              
+              {/* Fallback Link for Errors */}
+              <a 
+                 href={videoLink}
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 className="mb-8 text-[10px] text-gray-500 uppercase tracking-widest hover:text-blue-500 transition-colors flex items-center gap-2"
+              >
+                 Having trouble? Watch on YouTube <ExternalLink size={10} />
+              </a>
+
               <motion.p 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -155,10 +205,10 @@ const Podcast: React.FC = () => {
               >
                   {[
                     { icon: <SpotifyIcon />, label: "Spotify", href: "https://open.spotify.com/show/7ojBlNz4QzU9hby09R7ibZ" },
-                    { icon: <AppleIcon />, label: "Apple", href: "#" },
+                    { icon: <AppleIcon />, label: "Apple", href: "https://podcasts.apple.com/ae/podcast/zero-to-n/id1872102771" },
                     { icon: <YouTubeIcon />, label: "YouTube", href: "https://www.youtube.com/@0toNpodcast" },
                     { icon: <Linkedin size={20} />, label: "LinkedIn", href: "https://www.linkedin.com/company/zero-to-n-podcast" },
-                    { icon: <TikTokIcon />, label: "TikTok", href: "https://www.tiktok.com/@0tonpodcast" },
+                    { icon: <TikTokIcon />, label: "TikTok", href: "https://www.tiktok.com/@zerotonpodcast" },
                   ].map((platform, idx) => (
                     <a 
                       key={idx}
